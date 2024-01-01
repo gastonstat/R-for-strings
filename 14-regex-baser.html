@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.251">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>R for Strings - 14&nbsp; Regex Functions in R</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./15-fun-plot1.html" rel="next">
+<link href="./13-regex-stringr.html" rel="prev">
+<link href="./images/favicon.ico" rel="icon">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+<script type="text/javascript">
+
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-46765288', 'auto');
+
+ga('send', {
+  hitType: 'pageview',
+  'anonymizeIp': true,
+});
+</script>
+
+
+</head>
+
+<body class="nav-sidebar docked">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Regex Functions in R</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">R for Strings</a> 
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">About</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">I Characters in R</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-introduction.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introductory Appetizer</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-characters.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Character Strings in R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-basic-manipulations.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Basic Manipulations with <code>"base"</code> Functions</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-stringr-basics.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Basic Manipulations with <code>"stringr"</code> Functions</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">II Print &amp; Format</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-printing.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Formatting Text and Numbers</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-sprintf.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">C-style Formatting</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-input-output.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Input and Output</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">III Regex</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-regex-intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Getting Started with Regular Expressions</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-regex-charsets.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Character Sets</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-regex-anchors.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Anchors</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-regex-quantifiers.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Quantifiers</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-regex-boundaries.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Boundaries and Look Arounds</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13-regex-stringr.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Regex Functions in <code>"stringr"</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14-regex-baser.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Regex Functions in R</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">IV Applications</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./15-fun-plot1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Fun Plots (part 1)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./16-fun-plot2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Fun Plots (part 2)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./17-basic-examples.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Basic Examples</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18-matching-html-tags.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Matching HTML Tags</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./19-data-cleaning.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Data Cleaning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./20-log-file.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Data Log File</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#pattern-finding-functions" id="toc-pattern-finding-functions" class="nav-link active" data-scroll-target="#pattern-finding-functions"><span class="toc-section-number">14.1</span>  Pattern Finding Functions</a>
+  <ul class="collapse">
+  <li><a href="#function-grep" id="toc-function-grep" class="nav-link" data-scroll-target="#function-grep"><span class="toc-section-number">14.1.1</span>  Function <code>grep()</code></a></li>
+  <li><a href="#function-grepl" id="toc-function-grepl" class="nav-link" data-scroll-target="#function-grepl"><span class="toc-section-number">14.1.2</span>  Function <code>grepl()</code></a></li>
+  <li><a href="#function-regexpr" id="toc-function-regexpr" class="nav-link" data-scroll-target="#function-regexpr"><span class="toc-section-number">14.1.3</span>  Function <code>regexpr()</code></a></li>
+  <li><a href="#function-gregexpr" id="toc-function-gregexpr" class="nav-link" data-scroll-target="#function-gregexpr"><span class="toc-section-number">14.1.4</span>  Function <code>gregexpr()</code></a></li>
+  <li><a href="#function-regexec" id="toc-function-regexec" class="nav-link" data-scroll-target="#function-regexec"><span class="toc-section-number">14.1.5</span>  Function <code>regexec()</code></a></li>
+  </ul></li>
+  <li><a href="#pattern-replacement-functions" id="toc-pattern-replacement-functions" class="nav-link" data-scroll-target="#pattern-replacement-functions"><span class="toc-section-number">14.2</span>  Pattern Replacement Functions</a>
+  <ul class="collapse">
+  <li><a href="#replacing-first-occurrence-with-sub" id="toc-replacing-first-occurrence-with-sub" class="nav-link" data-scroll-target="#replacing-first-occurrence-with-sub"><span class="toc-section-number">14.2.1</span>  Replacing first occurrence with <code>sub()</code></a></li>
+  <li><a href="#replacing-all-occurrences-with-gsub" id="toc-replacing-all-occurrences-with-gsub" class="nav-link" data-scroll-target="#replacing-all-occurrences-with-gsub"><span class="toc-section-number">14.2.2</span>  Replacing all occurrences with <code>gsub()</code></a></li>
+  </ul></li>
+  <li><a href="#splitting-character-vectors" id="toc-splitting-character-vectors" class="nav-link" data-scroll-target="#splitting-character-vectors"><span class="toc-section-number">14.3</span>  Splitting Character Vectors</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="regexfuns" class="quarto-section-identifier d-none d-lg-block"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Regex Functions in R</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<p>In the previous chapters we talked about regex functions available in the package <code>"stringr"</code>. In this chapter we are going to describe more regular expression functions but this time from the <code>"base"</code> package (i.e.&nbsp;native regex functions in R).</p>
+<section id="pattern-finding-functions" class="level2" data-number="14.1">
+<h2 data-number="14.1" class="anchored" data-anchor-id="pattern-finding-functions"><span class="header-section-number">14.1</span> Pattern Finding Functions</h2>
+<p>Let’s begin by reviewing the first five <code>grep()</code>-like functions <code>grep()</code>, <code>grepl()</code>, <code>regexpr()</code>, <code>gregexpr()</code>, and <code>regexec()</code>. The goal is the same for all these functions: finding a match. The difference between them is in the format of the output. Essentially these functions require two main arguments: a pattern (i.e.&nbsp;regular expression), and a text to match. The basic usage for these functions is:</p>
+<pre><code> grep(pattern, text)
+ grepl(pattern, text)
+ regexpr(pattern, text)
+ gregexpr(pattern, text)
+ regexec(pattern, text)</code></pre>
+<p>Each function has other additional arguments but the important thing to keep in mind are a pattern and some text.</p>
+<section id="function-grep" class="level3" data-number="14.1.1">
+<h3 data-number="14.1.1" class="anchored" data-anchor-id="function-grep"><span class="header-section-number">14.1.1</span> Function <code>grep()</code></h3>
+<p><code>grep()</code> is perhaps the most basic functions that allows us to match a pattern in a string vector. The first argument in <code>grep()</code> is a regular expression that specifies the pattern to match. The second argument is a character vector with the text strings on which to search. The output is the indices of the elements of the text vector for which there is a match. If no matches are found, the output is an empty integer vector.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># some text</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>text <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"one word"</span>, <span class="st">"a sentence"</span>, <span class="st">"you and me"</span>, <span class="st">"three two one"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># pattern</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>pat <span class="ot">&lt;-</span> <span class="st">"one"</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># default usage</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span>(pat, text)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1 4</code></pre>
+</div>
+</div>
+<p>As you can tell from the output in the previous example, <code>grep()</code> returns a numeric vector. This indicates that the 1st and 4th elements contained a match. In contrast, the 2nd and the 3rd elements did not.</p>
+<p>We can use the argument <code>value</code> to modify the way in which the output is presented. If we choose <code>value = TRUE</code>, instead of returning the indices, <code>grep()</code> returns the content of the string vector:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># with 'value' (showing matched text)</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span>(pat, text, <span class="at">value =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "one word"      "three two one"</code></pre>
+</div>
+</div>
+<p>Another interesting argument to play with is <code>invert</code>. We can use this parameter to obtain unmatches strings by setting its value to <code>TRUE</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># with 'invert' (showing unmatched parts)</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span>(pat, text, <span class="at">invert =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2 3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># same with 'values'</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span>(pat, text, <span class="at">invert =</span> <span class="cn">TRUE</span>, <span class="at">value =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "a sentence" "you and me"</code></pre>
+</div>
+</div>
+<p>In summary, <code>grep()</code> can be used to subset a character vector to get only the elements containing (or not containing) the matched pattern.</p>
+</section>
+<section id="function-grepl" class="level3" data-number="14.1.2">
+<h3 data-number="14.1.2" class="anchored" data-anchor-id="function-grepl"><span class="header-section-number">14.1.2</span> Function <code>grepl()</code></h3>
+<p>The function <code>grepl()</code> enables us to perform a similar task as <code>grep()</code>. The difference resides in that the output are not numeric indices, but logical (<code>TRUE</code> / <code>FALSE</code>). Hence you can think of <code>grepl()</code> as <code>grep</code>-logical. Using the same text string of the previous examples, here’s the behavior of <code>grepl()</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># some text</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>text <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"one word"</span>, <span class="st">"a sentence"</span>, <span class="st">"you and me"</span>, <span class="st">"three two one"</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># pattern</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>pat <span class="ot">&lt;-</span> <span class="st">"one"</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co"># default usage</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="fu">grepl</span>(pat, text)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  TRUE FALSE FALSE  TRUE</code></pre>
+</div>
+</div>
+<p>Note that we get a logical vector of the same length as the character vector. Those elements that matched the pattern have a value of <code>TRUE</code>; those that didn’t match the pattern have a value of <code>FALSE</code>.</p>
+</section>
+<section id="function-regexpr" class="level3" data-number="14.1.3">
+<h3 data-number="14.1.3" class="anchored" data-anchor-id="function-regexpr"><span class="header-section-number">14.1.3</span> Function <code>regexpr()</code></h3>
+<p>To find exactly where the pattern is found in a given string, we can use the <code>regexpr()</code> function. This function returns more detailed information than <code>grep()</code> providing us:</p>
+<ol type="a">
+<li><p>which elements of the text vector actually contain the regex pattern, and</p></li>
+<li><p>identifies the position of the substring that is matched by the regular expression pattern</p></li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># some text</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>text <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"one word"</span>, <span class="st">"a sentence"</span>, <span class="st">"you and me"</span>, <span class="st">"three two one"</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># default usage</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">regexpr</span>(<span class="st">"one"</span>, text)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  1 -1 -1 11
+attr(,"match.length")
+[1]  3 -1 -1  3
+attr(,"index.type")
+[1] "chars"
+attr(,"useBytes")
+[1] TRUE</code></pre>
+</div>
+</div>
+<p>At first glance the output from <code>regexpr()</code> may look a bit messy but it’s very simple to interpret. What we have in the output are three displayed elements. The first element is an integer vector of the same length as text giving the starting positions of the first match. In this example the number 1 indicates that the pattern <code>"one"</code> starts at the position 1 of the first element in <code>text</code>. The negative index <code>-1</code> means that there was no match; the number 11 indicates the position of the substring that was matched in the fourth element of <code>text</code>.</p>
+<p>The attribute <code>"match.length"</code> gives us the <em>length</em> of the match in each element of <code>text</code>. Again, a negative value of <code>-1</code> means that there was no match in that element. Finally, the attribute <code>"useBytes"</code> has a value of <code>TRUE</code> which means that the matching was done byte-by-byte rather than character-by-character.</p>
+</section>
+<section id="function-gregexpr" class="level3" data-number="14.1.4">
+<h3 data-number="14.1.4" class="anchored" data-anchor-id="function-gregexpr"><span class="header-section-number">14.1.4</span> Function <code>gregexpr()</code></h3>
+<p>The function <code>gregexpr()</code> does practically the same thing as <code>regexpr()</code>: identify where a pattern is within a string vector, by searching each element separately. The only difference is that <code>gregexpr()</code> has an output in the form of a list. In other words, <code>gregexpr()</code> returns a list of the same length as <code>text</code>, each element of which is of the same form as the return value for <code>regexpr()</code>, except that the starting positions of every (disjoint) match are given.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># some text</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>text <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"one word"</span>, <span class="st">"a sentence"</span>, <span class="st">"you and me"</span>, <span class="st">"three two one"</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co"># pattern</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>pat <span class="ot">&lt;-</span> <span class="st">"one"</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co"># default usage</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="fu">gregexpr</span>(pat, text)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+[1] 1
+attr(,"match.length")
+[1] 3
+attr(,"index.type")
+[1] "chars"
+attr(,"useBytes")
+[1] TRUE
+
+[[2]]
+[1] -1
+attr(,"match.length")
+[1] -1
+attr(,"index.type")
+[1] "chars"
+attr(,"useBytes")
+[1] TRUE
+
+[[3]]
+[1] -1
+attr(,"match.length")
+[1] -1
+attr(,"index.type")
+[1] "chars"
+attr(,"useBytes")
+[1] TRUE
+
+[[4]]
+[1] 11
+attr(,"match.length")
+[1] 3
+attr(,"index.type")
+[1] "chars"
+attr(,"useBytes")
+[1] TRUE</code></pre>
+</div>
+</div>
+</section>
+<section id="function-regexec" class="level3" data-number="14.1.5">
+<h3 data-number="14.1.5" class="anchored" data-anchor-id="function-regexec"><span class="header-section-number">14.1.5</span> Function <code>regexec()</code></h3>
+<p>The function <code>regexec()</code> is very close to <code>gregexpr()</code> in the sense that the output is also a list of the same length as <code>text</code>. Each element of the list contains the starting position of the match. A value of <code>-1</code> reflects that there is no match. In addition, each element of the list has the attribute <code>"match.length"</code> giving the lengths of the matches (or -1 for no match):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># some text</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>text <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"one word"</span>, <span class="st">"a sentence"</span>, <span class="st">"you and me"</span>, <span class="st">"three two one"</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># pattern</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>pat <span class="ot">&lt;-</span> <span class="st">"one"</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="co"># default usage</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="fu">regexec</span>(pat, text)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+[1] 1
+attr(,"match.length")
+[1] 3
+attr(,"index.type")
+[1] "chars"
+attr(,"useBytes")
+[1] TRUE
+
+[[2]]
+[1] -1
+attr(,"match.length")
+[1] -1
+attr(,"index.type")
+[1] "chars"
+attr(,"useBytes")
+[1] TRUE
+
+[[3]]
+[1] -1
+attr(,"match.length")
+[1] -1
+attr(,"index.type")
+[1] "chars"
+attr(,"useBytes")
+[1] TRUE
+
+[[4]]
+[1] 11
+attr(,"match.length")
+[1] 3
+attr(,"index.type")
+[1] "chars"
+attr(,"useBytes")
+[1] TRUE</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="pattern-replacement-functions" class="level2" data-number="14.2">
+<h2 data-number="14.2" class="anchored" data-anchor-id="pattern-replacement-functions"><span class="header-section-number">14.2</span> Pattern Replacement Functions</h2>
+<p>Sometimes finding a pattern in a given string vector is all we want. However, there are occasions in which we might also be interested in <em>replacing</em> one pattern with another one. For this purpose we can use the substitution functions <code>sub()</code> and <code>gsub()</code>. The difference between <code>sub()</code> and <code>gsub()</code> is that the former replaces only the first occurrence of a pattern whereas the latter replaces all occurrences.</p>
+<p>The replacement functions require three main arguments: a regex <code>pattern</code> to be matched, a <code>replacement</code> for the matched pattern, and the <code>text</code> where matches are sought. The basic usage is:</p>
+<pre><code>sub(pattern, replacement, text)
+gsub(pattern, replacement, text)</code></pre>
+<section id="replacing-first-occurrence-with-sub" class="level3" data-number="14.2.1">
+<h3 data-number="14.2.1" class="anchored" data-anchor-id="replacing-first-occurrence-with-sub"><span class="header-section-number">14.2.1</span> Replacing first occurrence with <code>sub()</code></h3>
+<p>The function <code>sub()</code> replaces the <strong>first</strong> occurrence of a pattern in a given text. This means that if there is more than one occurrence of the pattern in each element of a string vector, only the first one will be replaced. For example, suppose we have the following text vector containing various strings:</p>
+<pre><code> Rstring = c("The R Foundation", 
+             "for Statistical Computing", 
+             "R is FREE software",
+             "R is a collaborative project")</code></pre>
+<p>Imagine that our aim is to replace the pattern <code>"R"</code> with a new pattern <code>"RR"</code>. If you use <code>sub()</code> this is what we obtain:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># string</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>Rstring <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"The R Foundation"</span>, </span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>            <span class="st">"for Statistical Computing"</span>, </span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>            <span class="st">"R is FREE software"</span>,</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>            <span class="st">"R is a collaborative project"</span>)</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="co"># substitute 'R' with 'RR'</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="fu">sub</span>(<span class="st">"R"</span>, <span class="st">"RR"</span>, Rstring)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "The RR Foundation"             "for Statistical Computing"    
+[3] "RR is FREE software"           "RR is a collaborative project"</code></pre>
+</div>
+</div>
+<p>As you can tell, only the first occurrence of the letter <code>R</code> is replaced in each element of the text vector. Note that the word <code>FREE</code> in the third element also contains an <code>R</code> but it was not replaced. This is because it was not the first occurrence of the pattern.</p>
+</section>
+<section id="replacing-all-occurrences-with-gsub" class="level3" data-number="14.2.2">
+<h3 data-number="14.2.2" class="anchored" data-anchor-id="replacing-all-occurrences-with-gsub"><span class="header-section-number">14.2.2</span> Replacing all occurrences with <code>gsub()</code></h3>
+<p>To replace not only the first pattern occurrence, but <strong>all</strong> of the occurrences we should use <code>gsub()</code> (think of it as <em>general</em> or <em>global</em> substition). If we take the same vector <code>Rstring</code> and patterns of the last example, this is what we obtain when we apply <code>gsub()</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># string</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>Rstring <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"The R Foundation"</span>, </span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>            <span class="st">"for Statistical Computing"</span>, </span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>            <span class="st">"R is FREE software"</span>,</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>            <span class="st">"R is a collaborative project"</span>)</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="co"># substitute</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="fu">gsub</span>(<span class="st">"R"</span>, <span class="st">"RR"</span>, Rstring)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "The RR Foundation"             "for Statistical Computing"    
+[3] "RR is FRREE software"          "RR is a collaborative project"</code></pre>
+</div>
+</div>
+<p>The obtained output is almost the same as with <code>sub()</code>, except for the third element in <code>Rstring</code>. Now the occurrence of <code>R</code> in the word <code>FREE</code> is taken into account and <code>gsub()</code> changes it to <code>FRREE</code>.</p>
+</section>
+</section>
+<section id="splitting-character-vectors" class="level2" data-number="14.3">
+<h2 data-number="14.3" class="anchored" data-anchor-id="splitting-character-vectors"><span class="header-section-number">14.3</span> Splitting Character Vectors</h2>
+<p>Besides the operations of finding patterns and replacing patterns, another common task is <em>splitting</em> a string based on a pattern. To do this R comes with the function <code>strsplit()</code> which is designed to split the elements of a character vector into substrings according to regex matches.</p>
+<p>If you check the help documentation—help(strsplit)—you will see that the basic usage of <code>strsplit()</code> requires two main arguments:</p>
+<pre><code> strsplit(x, split)</code></pre>
+<p><code>x</code> is the character vector and <code>split</code> is the regular expression pattern. However, in order to keep the same notation that we’ve been using with the other <code>grep()</code> functions, it is better if we think of <code>x</code> as <code>text</code>, and <code>split</code> as <code>pattern</code>. In this way we can express the usage of <code>strsplit()</code> as:</p>
+<pre><code> strsplit(text, pattern)</code></pre>
+<p>One of the typical tasks in which we can use <code>strsplit()</code> is when we want to break a string into individual components (i.e.&nbsp;words). For instance, if we wish to separate each word within a given sentence, we can do that specifying a blank space <code>" "</code> as splitting pattern:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># a sentence</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>sentence <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"R is a collaborative project with many contributors"</span>)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co"># split into words</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="fu">strsplit</span>(sentence, <span class="st">" "</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+[1] "R"             "is"            "a"             "collaborative"
+[5] "project"       "with"          "many"          "contributors" </code></pre>
+</div>
+</div>
+<p>Another basic example may consist in breaking apart the portions of a telephone number by splitting those sets of digits joined by a dash <code>"-"</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># telephone numbers</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>tels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"510-548-2238"</span>, <span class="st">"707-231-2440"</span>, <span class="st">"650-752-1300"</span>)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="co"># split each number into its portions</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="fu">strsplit</span>(tels, <span class="st">"-"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+[1] "510"  "548"  "2238"
+
+[[2]]
+[1] "707"  "231"  "2440"
+
+[[3]]
+[1] "650"  "752"  "1300"</code></pre>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./13-regex-stringr.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Regex Functions in <code>"stringr"</code></span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./15-fun-plot1.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Fun Plots (part 1)</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">Copyright 2024, <a href="https://www.gastonsanchez.com">Gaston Sanchez</a></div>   
+    <div class="nav-footer-right"><a href="https://www.paypal.com/donate?business=ZF6U7K5MW25W2&amp;currency_code=USD" target="_blank">Donate via PayPal</a></div>
+  </div>
+</footer>
+
+
+
+</body></html>

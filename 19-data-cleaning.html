@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.251">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>R for Strings - 19&nbsp; Data Cleaning</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./20-log-file.html" rel="next">
+<link href="./18-matching-html-tags.html" rel="prev">
+<link href="./images/favicon.ico" rel="icon">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+<script type="text/javascript">
+
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-46765288', 'auto');
+
+ga('send', {
+  hitType: 'pageview',
+  'anonymizeIp': true,
+});
+</script>
+
+
+</head>
+
+<body class="nav-sidebar docked">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Data Cleaning</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">R for Strings</a> 
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">About</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">I Characters in R</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-introduction.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introductory Appetizer</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-characters.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Character Strings in R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-basic-manipulations.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Basic Manipulations with <code>"base"</code> Functions</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-stringr-basics.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Basic Manipulations with <code>"stringr"</code> Functions</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">II Print &amp; Format</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-printing.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Formatting Text and Numbers</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-sprintf.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">C-style Formatting</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-input-output.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Input and Output</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">III Regex</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-regex-intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Getting Started with Regular Expressions</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-regex-charsets.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Character Sets</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-regex-anchors.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Anchors</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-regex-quantifiers.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Quantifiers</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-regex-boundaries.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Boundaries and Look Arounds</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13-regex-stringr.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Regex Functions in <code>"stringr"</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14-regex-baser.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Regex Functions in R</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">IV Applications</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./15-fun-plot1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Fun Plots (part 1)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./16-fun-plot2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Fun Plots (part 2)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./17-basic-examples.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Basic Examples</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18-matching-html-tags.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Matching HTML Tags</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./19-data-cleaning.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Data Cleaning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./20-log-file.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Data Log File</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#import-data" id="toc-import-data" class="nav-link active" data-scroll-target="#import-data"><span class="toc-section-number">19.1</span>  Import Data</a></li>
+  <li><a href="#extracting-meters" id="toc-extracting-meters" class="nav-link" data-scroll-target="#extracting-meters"><span class="toc-section-number">19.2</span>  Extracting Meters</a></li>
+  <li><a href="#extracting-country" id="toc-extracting-country" class="nav-link" data-scroll-target="#extracting-country"><span class="toc-section-number">19.3</span>  Extracting Country</a></li>
+  <li><a href="#cleaning-dates" id="toc-cleaning-dates" class="nav-link" data-scroll-target="#cleaning-dates"><span class="toc-section-number">19.4</span>  Cleaning Dates</a></li>
+  <li><a href="#month-and-day" id="toc-month-and-day" class="nav-link" data-scroll-target="#month-and-day"><span class="toc-section-number">19.5</span>  Month and Day</a></li>
+  <li><a href="#extracting-year" id="toc-extracting-year" class="nav-link" data-scroll-target="#extracting-year"><span class="toc-section-number">19.6</span>  Extracting Year</a></li>
+  <li><a href="#athlete-names" id="toc-athlete-names" class="nav-link" data-scroll-target="#athlete-names"><span class="toc-section-number">19.7</span>  Athlete Names</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="cleaning" class="quarto-section-identifier d-none d-lg-block"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Data Cleaning</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<p>In this application we are going to work with the Men’s Long Jump World Record Progression data from wikipedia (see screenshot below).</p>
+<p>https://en.wikipedia.org/wiki/Men%27s_long_jump_world_record_progression#Low_altitude_record_progression_1965%E2%80%931991</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/men-long-jump.png" class="img-fluid figure-img" width="745"></p>
+<p></p><figcaption class="figure-caption">Men’s Long Jump World Record Progression</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+
+</div>
+<section id="import-data" class="level2" data-number="19.1">
+<h2 data-number="19.1" class="anchored" data-anchor-id="import-data"><span class="header-section-number">19.1</span> Import Data</h2>
+<p>To import the data of the Record Progression table you can use a couple of functions from the package <code>rvest</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rvest)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>wiki_jump <span class="ot">&lt;-</span> <span class="st">'https://en.wikipedia.org/wiki/Men%27s_long_jump_world_record_progression'</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>long_jump <span class="ot">&lt;-</span> <span class="fu">read_html</span>(wiki_jump)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>tbl <span class="ot">&lt;-</span> <span class="fu">html_table</span>(<span class="fu">html_node</span>(long_jump, <span class="st">'table'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The function <code>read_html()</code> reads the html file of the wikipedia page. This will produce an object of type <code>"xml_document"</code> which we can further manipulate with other functions in <code>"rvest"</code>.</p>
+<p>Because the <em>Record progression</em> data is in an html <code>table</code> node, you can use <code>html_node()</code> to locate such table in the XML document. And then <em>extract</em> it with <code>html_table()</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(tbl, <span class="at">vec.len =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>tibble [18 × 5] (S3: tbl_df/tbl/data.frame)
+ $ Mark   : chr [1:18] "7.61&nbsp;m (24&nbsp;ft 11&nbsp;1⁄2&nbsp;in)" ...
+ $ Wind   : num [1:18] NA NA ...
+ $ Athlete: chr [1:18] "Peter O'Connor&nbsp;(IRE)" ...
+ $ Venue  : chr [1:18] "Dublin, Ireland" ...
+ $ Date   : chr [1:18] "5 August 1901[1]" ...</code></pre>
+</div>
+</div>
+<p>As you can tell, the extracted table <code>tbl</code> is a data frame with 18 rows and 5 columns.</p>
+</section>
+<section id="extracting-meters" class="level2" data-number="19.2">
+<h2 data-number="19.2" class="anchored" data-anchor-id="extracting-meters"><span class="header-section-number">19.2</span> Extracting Meters</h2>
+<p>The first task consists of looking at the values in column <code>Mark</code>, and find how to retrieve the distance values expressed in meters. For example, the first element in <code>Mark</code> is:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>tbl<span class="sc">$</span>Mark[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "7.61&nbsp;m (24&nbsp;ft 11&nbsp;1⁄2&nbsp;in)"</code></pre>
+</div>
+</div>
+<p>The goal is to obtain the number <code>7.61</code>. One way to achieve this task is via the <code>substr()</code> function.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">substr</span>(tbl<span class="sc">$</span>Mark[<span class="dv">1</span>], <span class="at">start =</span> <span class="dv">1</span>, <span class="at">stop =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "7.61"</code></pre>
+</div>
+</div>
+<p>We can do that for the entire vector:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>meters <span class="ot">&lt;-</span> <span class="fu">substr</span>(tbl<span class="sc">$</span>Mark, <span class="at">start =</span> <span class="dv">1</span>, <span class="at">stop =</span> <span class="dv">4</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>meters</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "7.61" "7.69" "7.76" "7.89" "7.90" "7.93" "7.98" "8.13" "8.21" "8.24"
+[11] "8.28" "8.31" "8.31" "8.34" "8.35" "8.35" "8.90" "8.95"</code></pre>
+</div>
+</div>
+<p>Notice that the meter values are not really numeric but character. In order to have <code>meters</code> as numbers, we should coerce them with <code>as.numeric()</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>meters <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">substr</span>(tbl<span class="sc">$</span>Mark, <span class="at">start =</span> <span class="dv">1</span>, <span class="at">stop =</span> <span class="dv">4</span>))</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>meters</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] 7.61 7.69 7.76 7.89 7.90 7.93 7.98 8.13 8.21 8.24 8.28 8.31 8.31 8.34 8.35
+[16] 8.35 8.90 8.95</code></pre>
+</div>
+</div>
+<section id="extracting-meters-with-regular-expressions" class="level4 unnumbered">
+<h4 class="unnumbered anchored" data-anchor-id="extracting-meters-with-regular-expressions">Extracting Meters with Regular Expressions</h4>
+<p>Instead of using the function <code>substr()</code> to obtain the distance values, let’s see how to achieve the same task using regular expressions. To do this we must determine a pattern to be matched. So, what is the pattern that all the distance values (in meters) have in common?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>mark1 <span class="ot">&lt;-</span> tbl<span class="sc">$</span>Mark[<span class="dv">1</span>]</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>mark1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "7.61&nbsp;m (24&nbsp;ft 11&nbsp;1⁄2&nbsp;in)"</code></pre>
+</div>
+</div>
+<p>If you look at the <code>Mark</code> content, you will notice that the target pattern is formed by: a digit, followed by a dot, followed by two digits. Such pattern can be codified as: <code>"[0-9]\\.[0-9][0-9]"</code>. So let’s test it and see if there’s match:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_detect</span>(mark1, <span class="at">pattern =</span> <span class="st">"[0-9]</span><span class="sc">\\</span><span class="st">.[0-9][0-9]"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+<p>To extract the distance pattern we use <code>str_extract()</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_extract</span>(mark1, <span class="at">pattern =</span> <span class="st">"[0-9]</span><span class="sc">\\</span><span class="st">.[0-9][0-9]"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "7.61"</code></pre>
+</div>
+</div>
+<p>And then we can apply it on the entire column to get:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_extract</span>(tbl<span class="sc">$</span>Mark, <span class="at">pattern =</span> <span class="st">"[0-9]</span><span class="sc">\\</span><span class="st">.[0-9][0-9]"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "7.61" "7.69" "7.76" "7.89" "7.90" "7.93" "7.98" "8.13" "8.21" "8.24"
+[11] "8.28" "8.31" "8.31" "8.34" "8.35" "8.35" "8.90" "8.95"</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="extracting-country" class="level2" data-number="19.3">
+<h2 data-number="19.3" class="anchored" data-anchor-id="extracting-country"><span class="header-section-number">19.3</span> Extracting Country</h2>
+<p>Consider the column <code>Athlete</code>. The first value corresponds to <code>Petter O'Connor</code> from Ireland.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>tbl<span class="sc">$</span>Athlete[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Peter O'Connor&nbsp;(IRE)"</code></pre>
+</div>
+</div>
+<p>Let’s create a vector <code>peter</code> for this athlete:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>peter <span class="ot">&lt;-</span> tbl<span class="sc">$</span>Athlete[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>How can we get the country abbreviation?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">substr</span>(peter, <span class="fu">nchar</span>(peter)<span class="sc">-</span><span class="dv">4</span>, <span class="fu">nchar</span>(peter))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "(IRE)"</code></pre>
+</div>
+</div>
+<p>That works but it is preferable to exclude the parentheses, that is, the third to last character, as well as the last character:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">substr</span>(peter, <span class="fu">nchar</span>(peter)<span class="sc">-</span><span class="dv">3</span>, <span class="fu">nchar</span>(peter)<span class="sc">-</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "IRE"</code></pre>
+</div>
+</div>
+<p>Now we can apply the <code>substr()</code> command with all the athletes:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># extract country</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">substr</span>(tbl<span class="sc">$</span>Athlete, <span class="fu">nchar</span>(tbl<span class="sc">$</span>Athlete)<span class="sc">-</span><span class="dv">4</span>, <span class="fu">nchar</span>(tbl<span class="sc">$</span>Athlete))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "(IRE)" "(USA)" "(USA)" "(USA)" "(USA)" "(HAI)" "(JPN)" "(USA)" "(USA)"
+[10] "(USA)" "(USA)" "(URS)" "(USA)" "(USA)" "(USA)" "(URS)" "(USA)" "(USA)"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>country <span class="ot">&lt;-</span> <span class="fu">substr</span>(tbl<span class="sc">$</span>Athlete, <span class="fu">nchar</span>(tbl<span class="sc">$</span>Athlete)<span class="sc">-</span><span class="dv">3</span>, <span class="fu">nchar</span>(tbl<span class="sc">$</span>Athlete)<span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>country</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "IRE" "USA" "USA" "USA" "USA" "HAI" "JPN" "USA" "USA" "USA" "USA" "URS"
+[13] "USA" "USA" "USA" "URS" "USA" "USA"</code></pre>
+</div>
+</div>
+</section>
+<section id="cleaning-dates" class="level2" data-number="19.4">
+<h2 data-number="19.4" class="anchored" data-anchor-id="cleaning-dates"><span class="header-section-number">19.4</span> Cleaning Dates</h2>
+<p>Now let’s consider tha values in column <code>Date</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># first 5 dates</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>tbl<span class="sc">$</span>Date[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "5 August 1901[1]" "23 July 1921[1]"  "7 July 1924[1]"   "13 June 1925[1]" 
+[5] "7 July 1928[1]"  </code></pre>
+</div>
+</div>
+<p>Notice that all the date values are formed by the day-number, the name of the month, the year, and then the characters <code>[1]</code>. Obviously we don’t need those last three characters <code>[1]</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>date1 <span class="ot">&lt;-</span> tbl<span class="sc">$</span>Date[<span class="dv">1</span>]</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>date1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "5 August 1901[1]"</code></pre>
+</div>
+</div>
+<p>First let’s see how to match the pattern <code>[1]</code>. Perhaps the first option that an inexperience user would try is:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_detect</span>(date1, <span class="at">pattern =</span> <span class="st">"[1]"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+<p>According to <code>str_detect()</code>, there’s is a match, so let’s see what exactly <code>"[1]"</code> is matching:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_match</span>(date1, <span class="at">pattern =</span> <span class="st">"[1]"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     [,1]
+[1,] "1" </code></pre>
+</div>
+</div>
+<p>Mmmm, not quite right. We are matching the character <code>"1"</code> but not <code>"[1]"</code>. Why? Because brackets are metacharacters. So in order to match brackets <em>as brackets</em> we need to escape them:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_match</span>(date1, <span class="at">pattern =</span> <span class="st">"</span><span class="sc">\\</span><span class="st">[1</span><span class="sc">\\</span><span class="st">]"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     [,1] 
+[1,] "[1]"</code></pre>
+</div>
+</div>
+<p>Now we are talking. The next step involves using <code>str_replace()</code> to match the pattern <code>"\\[1\\]"</code> and replace it with an empty string <code>""</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_replace</span>(date1, <span class="at">pattern =</span> <span class="st">"</span><span class="sc">\\</span><span class="st">[1</span><span class="sc">\\</span><span class="st">]"</span>, <span class="at">replacement =</span> <span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "5 August 1901"</code></pre>
+</div>
+</div>
+<p>Then, we can get an entire vector of clean dates:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># clean dates</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>dates <span class="ot">&lt;-</span> <span class="fu">str_replace</span>(tbl<span class="sc">$</span>Date, <span class="at">pattern =</span> <span class="st">"</span><span class="sc">\\</span><span class="st">[1</span><span class="sc">\\</span><span class="st">]"</span>, <span class="at">replacement =</span> <span class="st">""</span>)</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>dates</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "5 August 1901"     "23 July 1921"      "7 July 1924"      
+ [4] "13 June 1925"      "7 July 1928"       "9 September 1928" 
+ [7] "27 October 1931"   "25 May 1935"       "12 August 1960"   
+[10] "27 May 1961"       "16 July 1961"      "10 June 1962"     
+[13] "15 August 1964"    "12 September 1964" "29 May 1965"      
+[16] "19 October 1967"   "18 October 1968"   "30 August 1991"   </code></pre>
+</div>
+</div>
+</section>
+<section id="month-and-day" class="level2" data-number="19.5">
+<h2 data-number="19.5" class="anchored" data-anchor-id="month-and-day"><span class="header-section-number">19.5</span> Month and Day</h2>
+<p>We can further manipulate the dates. For example, say we are interested in extracting the name of the month. In the first date, this corresponds to extracting <code>"August"</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>dates[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "5 August 1901"</code></pre>
+</div>
+</div>
+<p>How can we do that? Several approaches can be applied in this case. For example, let’s inspect the format of the month names:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>dates[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "5 August 1901" "23 July 1921"  "7 July 1924"   "13 June 1925" 
+[5] "7 July 1928"  </code></pre>
+</div>
+</div>
+<p>They all begin with an upper case letter, followed by the rest of the characters in lower case. If we want to match month names formed by four letters (e.g.&nbsp;June, July), we could look for the pattern <code>"[A-Z][a-z][a-z][a-z]"</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_extract</span>(dates, <span class="at">pattern =</span> <span class="st">"[A-Z][a-z][a-z][a-z]"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "Augu" "July" "July" "June" "July" "Sept" "Octo" NA     "Augu" NA    
+[11] "July" "June" "Augu" "Sept" NA     "Octo" "Octo" "Augu"</code></pre>
+</div>
+</div>
+<p>The previous pattern <code>"[A-Z][a-z][a-z][a-z]"</code> not only matches <code>"June"</code> and <code>"July"</code> but also <code>"Augu"</code>, <code>"Sept"</code>, <code>"Octo"</code>. In addition, we have some missing values.</p>
+<p>Because the month names have variable lengths, we can use a repetition or quantifier operator. More specifically, we could look for the pattern <code>"[A-Z][a-z]+"</code>, that is: an upper case letter, followed by a lower case letter, repeated one or more times. The plus <code>+</code> tells the regex engine to attempt to match the preceding token once or more:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>month_names <span class="ot">&lt;-</span> <span class="fu">str_extract</span>(dates, <span class="at">pattern =</span> <span class="st">"[A-Z][a-z]+"</span>)</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>month_names</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "August"    "July"      "July"      "June"      "July"      "September"
+ [7] "October"   "May"       "August"    "May"       "July"      "June"     
+[13] "August"    "September" "May"       "October"   "October"   "August"   </code></pre>
+</div>
+</div>
+<p>Having extracted the name of the months, we can take advantage of a similar pattern to extract the days. How? Using a pattern formed by one digit range and the plus sign: <code>"[0-9]+"</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_extract</span>(dates, <span class="at">pattern =</span> <span class="st">"[0-9]+"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "5"  "23" "7"  "13" "7"  "9"  "27" "25" "12" "27" "16" "10" "15" "12" "29"
+[16] "19" "18" "30"</code></pre>
+</div>
+</div>
+</section>
+<section id="extracting-year" class="level2" data-number="19.6">
+<h2 data-number="19.6" class="anchored" data-anchor-id="extracting-year"><span class="header-section-number">19.6</span> Extracting Year</h2>
+<p>What about extracting the year number?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>dates[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "5 August 1901"</code></pre>
+</div>
+</div>
+<p>One option that we have discussed already is to use <code>substr()</code> or <code>str_sub()</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_sub</span>(dates, <span class="at">start =</span> <span class="fu">nchar</span>(dates)<span class="sc">-</span><span class="dv">3</span>, <span class="at">end =</span> <span class="fu">nchar</span>(dates))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "1901" "1921" "1924" "1925" "1928" "1928" "1931" "1935" "1960" "1961"
+[11] "1961" "1962" "1964" "1964" "1965" "1967" "1968" "1991"</code></pre>
+</div>
+</div>
+<p>or simply indicate a negative starting position (to counting from the end of the string):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_sub</span>(dates, <span class="at">start =</span> <span class="sc">-</span><span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "1901" "1921" "1924" "1925" "1928" "1928" "1931" "1935" "1960" "1961"
+[11] "1961" "1962" "1964" "1964" "1965" "1967" "1968" "1991"</code></pre>
+</div>
+</div>
+<p>Another option consists in using a pattern formed by four digits: <code>"[0-9][0-9][0-9][0-9]"</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_extract</span>(dates[<span class="dv">1</span>], <span class="at">pattern =</span> <span class="st">"[0-9][0-9][0-9][0-9]"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "1901"</code></pre>
+</div>
+</div>
+<p>An additional option consists in using an <em>end of string anchor</em> with the metacharacter <code>"$"</code> (dollar sign), and combine with a repetition operator <code>"+"</code> like: <code>"[0-9]+$"</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_extract</span>(dates[<span class="dv">1</span>], <span class="at">pattern =</span> <span class="st">"[0-9]+$"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "1901"</code></pre>
+</div>
+</div>
+<p>What is this pattern doing? The part of the pattern <code>"[0-9]+"</code> indicates that we want to match one or more digits. In order to tell the engine to match the pattern at the end of the string, we must use the anchor <code>"$"</code>.</p>
+<p>The same task can be achieved with a digit character class <code>\\d</code> and the repetition operator <code>+</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_extract</span>(dates[<span class="dv">1</span>], <span class="at">pattern =</span> <span class="st">"</span><span class="sc">\\</span><span class="st">d+$"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "1901"</code></pre>
+</div>
+</div>
+</section>
+<section id="athlete-names" class="level2" data-number="19.7">
+<h2 data-number="19.7" class="anchored" data-anchor-id="athlete-names"><span class="header-section-number">19.7</span> Athlete Names</h2>
+<p>Now let’s try to extract the athletes’ first and last names. We could specify a regex pattern for the first name <code>[A-Z][a-z][A-Z]?[a-z]+</code>, followed by a space, followed by an uper case letter, and one or more lower case letters <code>[A-Z][a-z]+</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_extract</span>(tbl<span class="sc">$</span>Athlete, <span class="at">pattern =</span> <span class="st">"[A-Z][a-z][A-Z]?[a-z]+ [A-Z][a-z]+"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] NA               "Edward Gourdin" "Robert Le"      "DeHart Hubbard"
+ [5] "Edward Hamm"    "Sylvio Cator"   "Chuhei Nambu"   "Jesse Owens"   
+ [9] "Ralph Boston"   "Ralph Boston"   "Ralph Boston"   "Igor Ter"      
+[13] "Ralph Boston"   "Ralph Boston"   "Ralph Boston"   "Igor Ter"      
+[17] "Bob Beamon"     "Mike Powell"   </code></pre>
+</div>
+</div>
+<p>What about the first athlete Peter O’Connor? The previous pattern does not include the apostrophe.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="co"># works for Peter O'Connor only</span></span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str_extract</span>(tbl<span class="sc">$</span>Athlete, <span class="at">pattern =</span> <span class="st">"[A-Z][a-z][A-Z]?[a-z]+ [A-Z]'[A-Z][a-z]+"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "Peter O'Connor" NA               NA               NA              
+ [5] NA               NA               NA               NA              
+ [9] NA               NA               NA               NA              
+[13] NA               NA               NA               NA              
+[17] NA               NA              </code></pre>
+</div>
+</div>
+<p>What about this other pattern?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="co"># still only works for Peter O'Connor</span></span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str_extract</span>(tbl<span class="sc">$</span>Athlete, <span class="at">pattern =</span> <span class="st">"[A-Z][a-z][A-Z]?[a-z]+ [A-Z]'[A-Z]?[a-z]+"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "Peter O'Connor" NA               NA               NA              
+ [5] NA               NA               NA               NA              
+ [9] NA               NA               NA               NA              
+[13] NA               NA               NA               NA              
+[17] NA               NA              </code></pre>
+</div>
+</div>
+<p>Recall that the quantifier (or repetition) operators have an effect on the preceding token. So, the pattern <code>"[A-Z]'[A-Z]?[a-z]+"</code> means: an upper case letter, followed by an apostrophe, followed by an optional upper case, followed by one or more lower case letters. In other words, the quantifier <code>"?"</code> only has an effect on the second upper case letter.</p>
+<p>In reality, we want both the apostrophe and the second upper case letters to be optional, so we need to add quantifiers <code>"?"</code> to both of them:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_extract</span>(tbl<span class="sc">$</span>Athlete, <span class="at">pattern =</span> <span class="st">"[A-Z][a-z][A-Z]?[a-z]+ [A-Z]'?[A-Z]?[a-z]+"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "Peter O'Connor" "Edward Gourdin" "Robert Le"      "DeHart Hubbard"
+ [5] "Edward Hamm"    "Sylvio Cator"   "Chuhei Nambu"   "Jesse Owens"   
+ [9] "Ralph Boston"   "Ralph Boston"   "Ralph Boston"   "Igor Ter"      
+[13] "Ralph Boston"   "Ralph Boston"   "Ralph Boston"   "Igor Ter"      
+[17] "Bob Beamon"     "Mike Powell"   </code></pre>
+</div>
+</div>
+<p>If you want to treat a set of characters as a single unit, you must wrap them inside parentheses:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_extract</span>(tbl<span class="sc">$</span>Athlete, <span class="at">pattern =</span> <span class="st">"[A-Z][a-z][A-Z]?[a-z]+ [A-Z]('[A-Z])?[a-z]+"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "Peter O'Connor" "Edward Gourdin" "Robert Le"      "DeHart Hubbard"
+ [5] "Edward Hamm"    "Sylvio Cator"   "Chuhei Nambu"   "Jesse Owens"   
+ [9] "Ralph Boston"   "Ralph Boston"   "Ralph Boston"   "Igor Ter"      
+[13] "Ralph Boston"   "Ralph Boston"   "Ralph Boston"   "Igor Ter"      
+[17] "Bob Beamon"     "Mike Powell"   </code></pre>
+</div>
+</div>
+<p>We still have an issue with athlete <code>Igor Ter-Ovanesyan</code>. The patterns used so far are only matching the the characters in his last name before the hyphen. We can start by adding a escaped hyphen inside the character set <code>"[a-z\\-]"</code> at the end of the pattern:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_extract</span>(tbl<span class="sc">$</span>Athlete, <span class="at">pattern =</span> <span class="st">"[A-Z][a-z][A-Z]?[a-z]+ [A-Z]('[A-Z])?[a-z</span><span class="sc">\\</span><span class="st">-]+"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "Peter O'Connor" "Edward Gourdin" "Robert Le"      "DeHart Hubbard"
+ [5] "Edward Hamm"    "Sylvio Cator"   "Chuhei Nambu"   "Jesse Owens"   
+ [9] "Ralph Boston"   "Ralph Boston"   "Ralph Boston"   "Igor Ter-"     
+[13] "Ralph Boston"   "Ralph Boston"   "Ralph Boston"   "Igor Ter-"     
+[17] "Bob Beamon"     "Mike Powell"   </code></pre>
+</div>
+</div>
+<p>Notice that this pattern does match the hyphen but fails to match the second part of the last name (the one after the hyphen). This is because our token is only matching lower case letters. So we also need to include upper case letters in the character set: <code>"[a-zA-Z\\-]"</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_extract</span>(tbl<span class="sc">$</span>Athlete, <span class="at">pattern =</span> <span class="st">"[A-Z][a-z][A-Z]?[a-z]+ [A-Z]('[A-Z])?[a-zA-Z</span><span class="sc">\\</span><span class="st">-]+"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "Peter O'Connor"     "Edward Gourdin"     "Robert LeGendre"   
+ [4] "DeHart Hubbard"     "Edward Hamm"        "Sylvio Cator"      
+ [7] "Chuhei Nambu"       "Jesse Owens"        "Ralph Boston"      
+[10] "Ralph Boston"       "Ralph Boston"       "Igor Ter-Ovanesyan"
+[13] "Ralph Boston"       "Ralph Boston"       "Ralph Boston"      
+[16] "Igor Ter-Ovanesyan" "Bob Beamon"         "Mike Powell"       </code></pre>
+</div>
+</div>
+<p>The regex patterns that involve a set such as <code>"[a-zA-Z]"</code> can be simplified with a repeated <strong>word</strong> character class <code>"\\w+"</code> (recall that <code>"\\w+"</code> is equivalent to <code>"[0-9A-Za-z_]"</code>). We can try to use two repeated word classes:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_extract</span>(tbl<span class="sc">$</span>Athlete, <span class="at">pattern =</span> <span class="st">"</span><span class="sc">\\</span><span class="st">w+ </span><span class="sc">\\</span><span class="st">w+"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "Peter O"         "Edward Gourdin"  "Robert LeGendre" "DeHart Hubbard" 
+ [5] "Edward Hamm"     "Sylvio Cator"    "Chuhei Nambu"    "Jesse Owens"    
+ [9] "Ralph Boston"    "Ralph Boston"    "Ralph Boston"    "Igor Ter"       
+[13] "Ralph Boston"    "Ralph Boston"    "Ralph Boston"    "Igor Ter"       
+[17] "Bob Beamon"      "Mike Powell"    </code></pre>
+</div>
+</div>
+<p>As you know, we also need to include an apostrphe and the hyphen. In this case, we can include them inside parentheses and separating them with the OR operator <code>"|"</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_extract</span>(tbl<span class="sc">$</span>Athlete, <span class="at">pattern =</span> <span class="st">"</span><span class="sc">\\</span><span class="st">w+ (</span><span class="sc">\\</span><span class="st">w|-|')+"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "Peter O'Connor"     "Edward Gourdin"     "Robert LeGendre"   
+ [4] "DeHart Hubbard"     "Edward Hamm"        "Sylvio Cator"      
+ [7] "Chuhei Nambu"       "Jesse Owens"        "Ralph Boston"      
+[10] "Ralph Boston"       "Ralph Boston"       "Igor Ter-Ovanesyan"
+[13] "Ralph Boston"       "Ralph Boston"       "Ralph Boston"      
+[16] "Igor Ter-Ovanesyan" "Bob Beamon"         "Mike Powell"       </code></pre>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./18-matching-html-tags.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Matching HTML Tags</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./20-log-file.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Data Log File</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">Copyright 2024, <a href="https://www.gastonsanchez.com">Gaston Sanchez</a></div>   
+    <div class="nav-footer-right"><a href="https://www.paypal.com/donate?business=ZF6U7K5MW25W2&amp;currency_code=USD" target="_blank">Donate via PayPal</a></div>
+  </div>
+</footer>
+
+
+
+</body></html>

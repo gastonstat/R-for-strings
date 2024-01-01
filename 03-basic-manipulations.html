@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.251">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>R for Strings - 3&nbsp; Basic Manipulations with "base" Functions</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./04-stringr-basics.html" rel="next">
+<link href="./02-characters.html" rel="prev">
+<link href="./images/favicon.ico" rel="icon">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+<script type="text/javascript">
+
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-46765288', 'auto');
+
+ga('send', {
+  hitType: 'pageview',
+  'anonymizeIp': true,
+});
+</script>
+
+
+</head>
+
+<body class="nav-sidebar docked">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Basic Manipulations with <code>"base"</code> Functions</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">R for Strings</a> 
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">About</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">I Characters in R</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-introduction.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introductory Appetizer</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-characters.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Character Strings in R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-basic-manipulations.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Basic Manipulations with <code>"base"</code> Functions</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-stringr-basics.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Basic Manipulations with <code>"stringr"</code> Functions</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">II Print &amp; Format</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-printing.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Formatting Text and Numbers</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-sprintf.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">C-style Formatting</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-input-output.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Input and Output</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">III Regex</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-regex-intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Getting Started with Regular Expressions</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-regex-charsets.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Character Sets</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-regex-anchors.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Anchors</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-regex-quantifiers.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Quantifiers</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-regex-boundaries.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Boundaries and Look Arounds</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13-regex-stringr.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Regex Functions in <code>"stringr"</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14-regex-baser.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Regex Functions in R</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">IV Applications</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./15-fun-plot1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Fun Plots (part 1)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./16-fun-plot2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Fun Plots (part 2)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./17-basic-examples.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Basic Examples</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18-matching-html-tags.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Matching HTML Tags</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./19-data-cleaning.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Data Cleaning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./20-log-file.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Data Log File</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#basic-string-manipulations" id="toc-basic-string-manipulations" class="nav-link active" data-scroll-target="#basic-string-manipulations"><span class="toc-section-number">3.1</span>  Basic String Manipulations</a>
+  <ul class="collapse">
+  <li><a href="#count-number-of-characters-with-nchar" id="toc-count-number-of-characters-with-nchar" class="nav-link" data-scroll-target="#count-number-of-characters-with-nchar"><span class="toc-section-number">3.1.1</span>  Count number of characters with <code>nchar()</code></a></li>
+  <li><a href="#convert-to-lower-case-with-tolower" id="toc-convert-to-lower-case-with-tolower" class="nav-link" data-scroll-target="#convert-to-lower-case-with-tolower"><span class="toc-section-number">3.1.2</span>  Convert to lower case with <code>tolower()</code></a></li>
+  <li><a href="#convert-to-upper-case-with-toupper" id="toc-convert-to-upper-case-with-toupper" class="nav-link" data-scroll-target="#convert-to-upper-case-with-toupper"><span class="toc-section-number">3.1.3</span>  Convert to upper case with <code>toupper()</code></a></li>
+  <li><a href="#upper-or-lower-case-conversion-with-casefold" id="toc-upper-or-lower-case-conversion-with-casefold" class="nav-link" data-scroll-target="#upper-or-lower-case-conversion-with-casefold"><span class="toc-section-number">3.1.4</span>  Upper or lower case conversion with <code>casefold()</code></a></li>
+  <li><a href="#character-translation-with-chartr" id="toc-character-translation-with-chartr" class="nav-link" data-scroll-target="#character-translation-with-chartr"><span class="toc-section-number">3.1.5</span>  Character translation with <code>chartr()</code></a></li>
+  <li><a href="#abbreviate-strings-with-abbreviate" id="toc-abbreviate-strings-with-abbreviate" class="nav-link" data-scroll-target="#abbreviate-strings-with-abbreviate"><span class="toc-section-number">3.1.6</span>  Abbreviate strings with <code>abbreviate()</code></a></li>
+  <li><a href="#replace-substrings-with-substr" id="toc-replace-substrings-with-substr" class="nav-link" data-scroll-target="#replace-substrings-with-substr"><span class="toc-section-number">3.1.7</span>  Replace substrings with <code>substr()</code></a></li>
+  <li><a href="#replace-substrings-with-substring" id="toc-replace-substrings-with-substring" class="nav-link" data-scroll-target="#replace-substrings-with-substring"><span class="toc-section-number">3.1.8</span>  Replace substrings with <code>substring()</code></a></li>
+  </ul></li>
+  <li><a href="#set-operations" id="toc-set-operations" class="nav-link" data-scroll-target="#set-operations"><span class="toc-section-number">3.2</span>  Set Operations</a>
+  <ul class="collapse">
+  <li><a href="#set-union-with-union" id="toc-set-union-with-union" class="nav-link" data-scroll-target="#set-union-with-union"><span class="toc-section-number">3.2.1</span>  Set union with <code>union()</code></a></li>
+  <li><a href="#set-intersection-with-intersect" id="toc-set-intersection-with-intersect" class="nav-link" data-scroll-target="#set-intersection-with-intersect"><span class="toc-section-number">3.2.2</span>  Set intersection with <code>intersect()</code></a></li>
+  <li><a href="#set-difference-with-setdiff" id="toc-set-difference-with-setdiff" class="nav-link" data-scroll-target="#set-difference-with-setdiff"><span class="toc-section-number">3.2.3</span>  Set difference with <code>setdiff()</code></a></li>
+  <li><a href="#set-equality-with-setequal" id="toc-set-equality-with-setequal" class="nav-link" data-scroll-target="#set-equality-with-setequal"><span class="toc-section-number">3.2.4</span>  Set equality with <code>setequal()</code></a></li>
+  <li><a href="#exact-equality-with-identical" id="toc-exact-equality-with-identical" class="nav-link" data-scroll-target="#exact-equality-with-identical"><span class="toc-section-number">3.2.5</span>  Exact equality with <code>identical()</code></a></li>
+  <li><a href="#element-contained-with-is.element" id="toc-element-contained-with-is.element" class="nav-link" data-scroll-target="#element-contained-with-is.element"><span class="toc-section-number">3.2.6</span>  Element contained with <code>is.element()</code></a></li>
+  <li><a href="#sorting-with-sort" id="toc-sorting-with-sort" class="nav-link" data-scroll-target="#sorting-with-sort"><span class="toc-section-number">3.2.7</span>  Sorting with <code>sort()</code></a></li>
+  <li><a href="#repetition-with-pasterep" id="toc-repetition-with-pasterep" class="nav-link" data-scroll-target="#repetition-with-pasterep"><span class="toc-section-number">3.2.8</span>  Repetition with <code>paste(rep())</code></a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="basics1" class="quarto-section-identifier d-none d-lg-block"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Basic Manipulations with <code>"base"</code> Functions</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<p>In this chapter you will learn about the different functions to do what I call <em>basic manipulations</em>. By “basic” I mean transforming and processing strings in such way that do not require the use of <a href="01-introduction.html">regular expressions</a>. More advanced manipulations involve defining patterns of text and matching such patterns. This is the essential idea behind regular expressions, which is the content of part 3 in this book.</p>
+<section id="basic-string-manipulations" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="basic-string-manipulations"><span class="header-section-number">3.1</span> Basic String Manipulations</h2>
+<p>Besides creating and printing strings, there are a number of very handy functions in R for doing some basic manipulation of strings. In this section<br>
+we will review the following functions:</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Function</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>nchar()</code></td>
+<td style="text-align: left;">number of characters</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>tolower()</code></td>
+<td style="text-align: left;">convert to lower case</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>toupper()</code></td>
+<td style="text-align: left;">convert to upper case</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>casefold()</code></td>
+<td style="text-align: left;">case folding</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>chartr()</code></td>
+<td style="text-align: left;">character translation</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>abbreviate()</code></td>
+<td style="text-align: left;">abbreviation</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>substring()</code></td>
+<td style="text-align: left;">substrings of a character vector</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>substr()</code></td>
+<td style="text-align: left;">substrings of a character vector</td>
+</tr>
+</tbody>
+</table>
+<section id="count-number-of-characters-with-nchar" class="level3" data-number="3.1.1">
+<h3 data-number="3.1.1" class="anchored" data-anchor-id="count-number-of-characters-with-nchar"><span class="header-section-number">3.1.1</span> Count number of characters with <code>nchar()</code></h3>
+<p>One of the main functions for manipulating character strings is <code>nchar()</code> which counts the number of characters in a string. In other words, <code>nchar()</code> provides the length of a string:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># how many characters?</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">nchar</span>(<span class="fu">c</span>(<span class="st">"How"</span>, <span class="st">"many"</span>, <span class="st">"characters?"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  3  4 11</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># how many characters?</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">nchar</span>(<span class="st">"How many characters?"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 20</code></pre>
+</div>
+</div>
+<p>Notice that the white spaces between words in the second example are also counted as characters.</p>
+<p>It is important not to confuse <code>nchar()</code> with <code>length()</code>. While the former gives us the <strong>number of characters</strong>, the later only gives the number of elements in a vector.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># how many elements?</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">c</span>(<span class="st">"How"</span>, <span class="st">"many"</span>, <span class="st">"characters?"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># how many elements?</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(<span class="st">"How many characters?"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1</code></pre>
+</div>
+</div>
+</section>
+<section id="convert-to-lower-case-with-tolower" class="level3" data-number="3.1.2">
+<h3 data-number="3.1.2" class="anchored" data-anchor-id="convert-to-lower-case-with-tolower"><span class="header-section-number">3.1.2</span> Convert to lower case with <code>tolower()</code></h3>
+<p>R comes with three functions for text casefolding.</p>
+<ol type="1">
+<li><code>tolower()</code></li>
+<li><code>toupper()</code></li>
+<li><code>casefold()</code></li>
+</ol>
+<p>The first function we’ll discuss is <code>tolower()</code> which converts any upper case characters into lower case:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># to lower case</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tolower</span>(<span class="fu">c</span>(<span class="st">"aLL ChaRacterS in LoweR caSe"</span>, <span class="st">"ABCDE"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "all characters in lower case" "abcde"                       </code></pre>
+</div>
+</div>
+</section>
+<section id="convert-to-upper-case-with-toupper" class="level3" data-number="3.1.3">
+<h3 data-number="3.1.3" class="anchored" data-anchor-id="convert-to-upper-case-with-toupper"><span class="header-section-number">3.1.3</span> Convert to upper case with <code>toupper()</code></h3>
+<p>The opposite function of <code>tolower()</code> is <code>toupper</code>. As you may guess, this function converts any lower case characters into upper case:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># to upper case</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">toupper</span>(<span class="fu">c</span>(<span class="st">"All ChaRacterS in Upper Case"</span>, <span class="st">"abcde"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "ALL CHARACTERS IN UPPER CASE" "ABCDE"                       </code></pre>
+</div>
+</div>
+</section>
+<section id="upper-or-lower-case-conversion-with-casefold" class="level3" data-number="3.1.4">
+<h3 data-number="3.1.4" class="anchored" data-anchor-id="upper-or-lower-case-conversion-with-casefold"><span class="header-section-number">3.1.4</span> Upper or lower case conversion with <code>casefold()</code></h3>
+<p>The third function for case-folding is <code>casefold()</code> which is a wrapper for both <code>tolower()</code> and <code>toupper()</code>. Its uasge has the following form:</p>
+<pre><code>casefold(x, upper = FALSE)</code></pre>
+<p>By default, <code>casefold()</code> converts all characters to lower case, but you can use the argument <code>upper = TRUE</code> to indicate the opposite (characters in upper case):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># lower case folding</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">casefold</span>(<span class="st">"aLL ChaRacterS in LoweR caSe"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "all characters in lower case"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># upper case folding</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">casefold</span>(<span class="st">"All ChaRacterS in Upper Case"</span>, <span class="at">upper =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "ALL CHARACTERS IN UPPER CASE"</code></pre>
+</div>
+</div>
+<p>I’ve found the case-folding functions to be very helpful when I write functions that take a character input which may be specified in lower or upper case, or perhaps as a mix of both cases. For instance, consider the function <code>temp_convert()</code> that takes a temperature value in Fahrenheit degress, and a character string indicating the name of the scale to be converted.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>temp_convert <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">deg =</span> <span class="dv">1</span>, <span class="at">to =</span> <span class="st">"celsius"</span>) {</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">switch</span>(to,</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>         <span class="st">"celsius"</span> <span class="ot">=</span> (deg <span class="sc">-</span> <span class="dv">32</span>) <span class="sc">*</span> (<span class="dv">5</span><span class="sc">/</span><span class="dv">9</span>),</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>         <span class="st">"kelvin"</span> <span class="ot">=</span> (deg <span class="sc">+</span> <span class="fl">459.67</span>) <span class="sc">*</span> (<span class="dv">5</span><span class="sc">/</span><span class="dv">9</span>),</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>         <span class="st">"reaumur"</span> <span class="ot">=</span> (deg <span class="sc">-</span> <span class="dv">32</span>) <span class="sc">*</span> (<span class="dv">4</span><span class="sc">/</span><span class="dv">9</span>),</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>         <span class="st">"rankine"</span> <span class="ot">=</span> deg <span class="sc">+</span> <span class="fl">459.67</span>)</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Here is how you call <code>temp_convert()</code> to convert 10 Fahrenheit degrees into celsius degrees:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">temp_convert</span>(<span class="at">deg =</span> <span class="dv">10</span>, <span class="at">to =</span> <span class="st">"celsius"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -12.22222</code></pre>
+</div>
+</div>
+<p><code>temp_convert()</code> works fine when the argument <code>to = 'celsius'</code>. But what happens if you try <code>temp_convert(30, 'Celsius')</code> or <code>temp_convert(30, 'CELSIUS')</code>?</p>
+<p>To have a more flexible function <code>temp_convert()</code> you can apply <code>tolower()</code> to the argument <code>to</code>, and in this way guarantee that the provided string by the user is always in lower case:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>temp_convert <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">deg =</span> <span class="dv">1</span>, <span class="at">to =</span> <span class="st">"celsius"</span>) {</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">switch</span>(<span class="fu">tolower</span>(to),</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>         <span class="st">"celsius"</span> <span class="ot">=</span> (deg <span class="sc">-</span> <span class="dv">32</span>) <span class="sc">*</span> (<span class="dv">5</span><span class="sc">/</span><span class="dv">9</span>),</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>         <span class="st">"kelvin"</span> <span class="ot">=</span> (deg <span class="sc">+</span> <span class="fl">459.67</span>) <span class="sc">*</span> (<span class="dv">5</span><span class="sc">/</span><span class="dv">9</span>),</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>         <span class="st">"reaumur"</span> <span class="ot">=</span> (deg <span class="sc">-</span> <span class="dv">32</span>) <span class="sc">*</span> (<span class="dv">4</span><span class="sc">/</span><span class="dv">9</span>),</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>         <span class="st">"rankine"</span> <span class="ot">=</span> deg <span class="sc">+</span> <span class="fl">459.67</span>)</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now all the following three calls are equivalent:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">temp_convert</span>(<span class="dv">30</span>, <span class="st">'celsius'</span>)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">temp_convert</span>(<span class="dv">30</span>, <span class="st">'Celsius'</span>)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">temp_convert</span>(<span class="dv">30</span>, <span class="st">'CELSIUS'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="character-translation-with-chartr" class="level3" data-number="3.1.5">
+<h3 data-number="3.1.5" class="anchored" data-anchor-id="character-translation-with-chartr"><span class="header-section-number">3.1.5</span> Character translation with <code>chartr()</code></h3>
+<p>There’s also the function <code>chartr()</code> which stands for <em>character translation</em>. <code>chartr()</code> takes three arguments: an <code>old</code> string, a <code>new</code> string, and a character vector <code>x</code>:</p>
+<pre><code>chartr(old, new, x)</code></pre>
+<p>The way <code>chartr()</code> works is by replacing the characters in <code>old</code> that appear in <code>x</code> by those indicated in <code>new</code>. For example, suppose we want to translate the letter <code>"a"</code> (lower case) with <code>"A"</code> (upper case) in the sentence <code>"This is a boring string"</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># replace 'a' by 'A'</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">chartr</span>(<span class="st">"a"</span>, <span class="st">"A"</span>, <span class="st">"This is a boring string"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "This is A boring string"</code></pre>
+</div>
+</div>
+<p>It is important to note that <code>old</code> and <code>new</code> must have the same number of characters, otherwise you will get a nasty error message like this one:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># incorrect use</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">chartr</span>(<span class="st">"ai"</span>, <span class="st">"X"</span>, <span class="st">"This is a bad example"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in chartr("ai", "X", "This is a bad example"): 'old' is longer than 'new'</code></pre>
+</div>
+</div>
+<p>Here’s a more interesting example with <code>old = "aei"</code> and <code>new = "\#!?"</code>. This implies that any <code>'a'</code> in <code>'x'</code> will be replaced by <code>'\#'</code>, any <code>'e'</code> in <code>'x'</code> will be replaced by <code>'?'</code>, and any <code>'i'</code> in <code>'x'</code> will be replaced by <code>'?'</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># multiple replacements</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>crazy <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Here's to the crazy ones"</span>, <span class="st">"The misfits"</span>, <span class="st">"The rebels"</span>)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="fu">chartr</span>(<span class="st">"aei"</span>, <span class="st">"#!?"</span>, crazy)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "H!r!'s to th! cr#zy on!s" "Th! m?sf?ts"             
+[3] "Th! r!b!ls"              </code></pre>
+</div>
+</div>
+</section>
+<section id="abbreviate-strings-with-abbreviate" class="level3" data-number="3.1.6">
+<h3 data-number="3.1.6" class="anchored" data-anchor-id="abbreviate-strings-with-abbreviate"><span class="header-section-number">3.1.6</span> Abbreviate strings with <code>abbreviate()</code></h3>
+<p>Another useful function for basic manipulation of character strings is <code>abbreviate()</code>. Its usage has the following structure:</p>
+<pre><code>abbreviate(names.org, minlength = 4, dot = FALSE, strict = FALSE,
+            method = c("left.keep", "both.sides"))</code></pre>
+<p>Although there are several arguments, the main parameter is the character vector (<code>names.org</code>) which will contain the names that we want to abbreviate:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># some color names</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>some_colors <span class="ot">&lt;-</span> <span class="fu">colors</span>()[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>some_colors</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "white"         "aliceblue"     "antiquewhite"  "antiquewhite1"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># abbreviate (default usage)</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>colors1 <span class="ot">&lt;-</span> <span class="fu">abbreviate</span>(some_colors)</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>colors1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        white     aliceblue  antiquewhite antiquewhite1 
+       "whit"        "alcb"        "antq"        "ant1" </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># abbreviate with 'minlength'</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>colors2 <span class="ot">&lt;-</span> <span class="fu">abbreviate</span>(some_colors, <span class="at">minlength =</span> <span class="dv">5</span>)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>colors2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        white     aliceblue  antiquewhite antiquewhite1 
+      "white"       "alcbl"       "antqw"       "antq1" </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># abbreviate</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>colors3 <span class="ot">&lt;-</span> <span class="fu">abbreviate</span>(some_colors, <span class="at">minlength =</span> <span class="dv">3</span>, <span class="at">method =</span> <span class="st">"both.sides"</span>)</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>colors3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        white     aliceblue  antiquewhite antiquewhite1 
+        "wht"         "alc"         "ant"         "an1" </code></pre>
+</div>
+</div>
+<p>A common use for <code>abbreviate()</code> is when plotting names of objects or variables in a graphic. I will use the built-in data set <code>mtcars</code> to show you a simple example with a scatterplot between variables <code>mpg</code> and <code>disp</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mtcars<span class="sc">$</span>mpg, mtcars<span class="sc">$</span>disp, <span class="at">type =</span> <span class="st">"n"</span>)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(mtcars<span class="sc">$</span>mpg, mtcars<span class="sc">$</span>disp, <span class="fu">rownames</span>(mtcars))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="03-basic-manipulations_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>The names of the cars are all over the plot. In this situation you may want to consider using <code>abbreviate()</code> to shrink the names of the cars and produce a less “crowded” plot:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mtcars<span class="sc">$</span>mpg, mtcars<span class="sc">$</span>disp, <span class="at">type =</span> <span class="st">"n"</span>)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(mtcars<span class="sc">$</span>mpg, mtcars<span class="sc">$</span>disp, <span class="fu">abbreviate</span>(<span class="fu">rownames</span>(mtcars)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="03-basic-manipulations_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="replace-substrings-with-substr" class="level3" data-number="3.1.7">
+<h3 data-number="3.1.7" class="anchored" data-anchor-id="replace-substrings-with-substr"><span class="header-section-number">3.1.7</span> Replace substrings with <code>substr()</code></h3>
+<p>One common operation when working with strings is the extraction and replacement of some characters. There a various ways in which characters can be replaced. If the replacement is based on the positions that characters occupy in the string, you can use the functions <code>substr()</code> and <code>substring()</code></p>
+<p><code>substr()</code> extracts or replaces substrings in a character vector. Its usage has the following form:</p>
+<pre><code>substr(x, start, stop)</code></pre>
+<p><code>x</code> is a character vector, <code>start</code> indicates the first element to be replaced, and <code>stop</code> indicates the last element to be replaced:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># extract 'bcd'</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">substr</span>(<span class="st">"abcdef"</span>, <span class="dv">2</span>, <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "bcd"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># replace 2nd letter with hash symbol</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"may"</span>, <span class="st">"the"</span>, <span class="st">"force"</span>, <span class="st">"be"</span>, <span class="st">"with"</span>, <span class="st">"you"</span>)</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="fu">substr</span>(x, <span class="dv">2</span>, <span class="dv">2</span>) <span class="ot">&lt;-</span> <span class="st">"#"</span></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "m#y"   "t#e"   "f#rce" "b#"    "w#th"  "y#u"  </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># replace 2nd and 3rd letters with happy face</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"may"</span>, <span class="st">"the"</span>, <span class="st">"force"</span>, <span class="st">"be"</span>, <span class="st">"with"</span>, <span class="st">"you"</span>)</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="fu">substr</span>(y, <span class="dv">2</span>, <span class="dv">3</span>) <span class="ot">&lt;-</span> <span class="st">":)"</span></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>y</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "m:)"   "t:)"   "f:)ce" "b:"    "w:)h"  "y:)"  </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># replacement with recycling</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"may"</span>, <span class="st">"the"</span>, <span class="st">"force"</span>, <span class="st">"be"</span>, <span class="st">"with"</span>, <span class="st">"you"</span>)</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="fu">substr</span>(z, <span class="dv">2</span>, <span class="dv">3</span>) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"#"</span>, <span class="st">"```"</span>)</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>z</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "m#y"   "t``"   "f#rce" "b`"    "w#th"  "y``"  </code></pre>
+</div>
+</div>
+</section>
+<section id="replace-substrings-with-substring" class="level3" data-number="3.1.8">
+<h3 data-number="3.1.8" class="anchored" data-anchor-id="replace-substrings-with-substring"><span class="header-section-number">3.1.8</span> Replace substrings with <code>substring()</code></h3>
+<p>Closely related to <code>substr()</code> is the function <code>substring()</code> which extracts or replaces substrings in a character vector. Its usage has the following form:</p>
+<pre><code>substring(text, first, last = 1000000L)</code></pre>
+<p><code>text</code> is a character vector, <code>first</code> indicates the first element to be replaced, and <code>last</code> indicates the last element to be replaced:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># same as 'substr'</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="fu">substring</span>(<span class="st">"ABCDEF"</span>, <span class="dv">2</span>, <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "BCD"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">substr</span>(<span class="st">"ABCDEF"</span>, <span class="dv">2</span>, <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "BCD"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># extract each letter</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="fu">substring</span>(<span class="st">"ABCDEF"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "A" "B" "C" "D" "E" "F"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co"># multiple replacement with recycling</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>text6 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"more"</span>, <span class="st">"emotions"</span>, <span class="st">"are"</span>, <span class="st">"better"</span>, <span class="st">"than"</span>, <span class="st">"less"</span>)</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a><span class="fu">substring</span>(text6, <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">" "</span>, <span class="st">"zzz"</span>)</span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>text6</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] " ore"     "ezzzions" "ar "      "zzzter"   "t an"     "lezz"    </code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="set-operations" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="set-operations"><span class="header-section-number">3.2</span> Set Operations</h2>
+<p>R has dedicated functions for performing set operations on two given vectors. This implies that we can apply functions such as set union, intersection, difference, equality and membership, on <code>"character"</code> vectors.</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Function</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>union()</code></td>
+<td style="text-align: left;">set union</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>intersect()</code></td>
+<td style="text-align: left;">intersection</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>setdiff()</code></td>
+<td style="text-align: left;">set difference</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>setequal()</code></td>
+<td style="text-align: left;">equal sets</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>identical()</code></td>
+<td style="text-align: left;">exact equality</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>is.element()</code></td>
+<td style="text-align: left;">is element</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>%in%()</code></td>
+<td style="text-align: left;">contains</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>sort()</code></td>
+<td style="text-align: left;">sorting</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>paste(rep())</code></td>
+<td style="text-align: left;">repetition</td>
+</tr>
+</tbody>
+</table>
+<section id="set-union-with-union" class="level3" data-number="3.2.1">
+<h3 data-number="3.2.1" class="anchored" data-anchor-id="set-union-with-union"><span class="header-section-number">3.2.1</span> Set union with <code>union()</code></h3>
+<p>Let’s start our reviewing of set functions with <code>union()</code>. As its name indicates, you can use `union()} when you want to obtain the elements of the union between two character vectors:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co"># two character vectors</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>set1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"some"</span>, <span class="st">"random"</span>, <span class="st">"words"</span>, <span class="st">"some"</span>)</span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>set2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"some"</span>, <span class="st">"many"</span>, <span class="st">"none"</span>, <span class="st">"few"</span>)</span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a><span class="co"># union of set1 and set2</span></span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a><span class="fu">union</span>(set1, set2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "some"   "random" "words"  "many"   "none"   "few"   </code></pre>
+</div>
+</div>
+<p>Notice that <code>union()</code> discards any duplicated values in the provided vectors. In the previous example the word <code>"some"</code> appears twice inside <code>set1</code> but it appears only once in the union. In fact all the set operation functions will discard any duplicated values.</p>
+</section>
+<section id="set-intersection-with-intersect" class="level3" data-number="3.2.2">
+<h3 data-number="3.2.2" class="anchored" data-anchor-id="set-intersection-with-intersect"><span class="header-section-number">3.2.2</span> Set intersection with <code>intersect()</code></h3>
+<p>Set intersection is performed with the function <code>intersect()</code>. You can use this function when you wish to get those elements that are common to both vectors:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="co"># two character vectors</span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>set3 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"some"</span>, <span class="st">"random"</span>, <span class="st">"few"</span>, <span class="st">"words"</span>)</span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>set4 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"some"</span>, <span class="st">"many"</span>, <span class="st">"none"</span>, <span class="st">"few"</span>)</span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a><span class="co"># intersect of set3 and set4</span></span>
+<span id="cb61-6"><a href="#cb61-6" aria-hidden="true" tabindex="-1"></a><span class="fu">intersect</span>(set3, set4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "some" "few" </code></pre>
+</div>
+</div>
+</section>
+<section id="set-difference-with-setdiff" class="level3" data-number="3.2.3">
+<h3 data-number="3.2.3" class="anchored" data-anchor-id="set-difference-with-setdiff"><span class="header-section-number">3.2.3</span> Set difference with <code>setdiff()</code></h3>
+<p>Related to the intersection, you might be interested in getting the difference of the elements between two character vectors. This can be done with <code>setdiff()</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="co"># two character vectors</span></span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>set5 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"some"</span>, <span class="st">"random"</span>, <span class="st">"few"</span>, <span class="st">"words"</span>)</span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>set6 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"some"</span>, <span class="st">"many"</span>, <span class="st">"none"</span>, <span class="st">"few"</span>)</span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a><span class="co"># difference between set5 and set6</span></span>
+<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a><span class="fu">setdiff</span>(set5, set6)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "random" "words" </code></pre>
+</div>
+</div>
+</section>
+<section id="set-equality-with-setequal" class="level3" data-number="3.2.4">
+<h3 data-number="3.2.4" class="anchored" data-anchor-id="set-equality-with-setequal"><span class="header-section-number">3.2.4</span> Set equality with <code>setequal()</code></h3>
+<p>The function <code>setequal()</code> allows you to test the equality of two character vectors. If the vectors contain the same elements, <code>setequal()</code> returns <code>TRUE</code> (<code>FALSE</code> otherwise)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="co"># three character vectors</span></span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>set7 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"some"</span>, <span class="st">"random"</span>, <span class="st">"strings"</span>)</span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>set8 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"some"</span>, <span class="st">"many"</span>, <span class="st">"none"</span>, <span class="st">"few"</span>)</span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a>set9 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"strings"</span>, <span class="st">"random"</span>, <span class="st">"some"</span>)</span>
+<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-6"><a href="#cb65-6" aria-hidden="true" tabindex="-1"></a><span class="co"># set7 == set8?</span></span>
+<span id="cb65-7"><a href="#cb65-7" aria-hidden="true" tabindex="-1"></a><span class="fu">setequal</span>(set7, set8)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] FALSE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set7 == set9?</span></span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a><span class="fu">setequal</span>(set7, set9)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+</section>
+<section id="exact-equality-with-identical" class="level3" data-number="3.2.5">
+<h3 data-number="3.2.5" class="anchored" data-anchor-id="exact-equality-with-identical"><span class="header-section-number">3.2.5</span> Exact equality with <code>identical()</code></h3>
+<p>Sometimes <code>setequal()</code> is not always what we want to use. It might be the case that you want to test whether two vectors are <em>exactly equal</em> (element by element). For instance, testing if <code>set7</code> is exactly equal to <code>set9</code>. Although both vectors contain the same set of elements, they are not exactly the same vector. Such test can be performed with the function <code>identical()</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set7 identical to set7?</span></span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a><span class="fu">identical</span>(set7, set7)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set7 identical to set9?</span></span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a><span class="fu">identical</span>(set7, set9)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] FALSE</code></pre>
+</div>
+</div>
+<p>If you consult the help documentation of <code>identical()</code>, you will see that this function is the “safe and reliable way to test two objects for being exactly equal”.</p>
+</section>
+<section id="element-contained-with-is.element" class="level3" data-number="3.2.6">
+<h3 data-number="3.2.6" class="anchored" data-anchor-id="element-contained-with-is.element"><span class="header-section-number">3.2.6</span> Element contained with <code>is.element()</code></h3>
+<p>If you wish to test if an element is contained in a given set of character strings you can do so with <code>is.element()</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="co"># three vectors</span></span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>set10 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"some"</span>, <span class="st">"stuff"</span>, <span class="st">"to"</span>, <span class="st">"play"</span>, <span class="st">"with"</span>)</span>
+<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a>elem1 <span class="ot">&lt;-</span> <span class="st">"play"</span></span>
+<span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a>elem2 <span class="ot">&lt;-</span> <span class="st">"crazy"</span></span>
+<span id="cb73-5"><a href="#cb73-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb73-6"><a href="#cb73-6" aria-hidden="true" tabindex="-1"></a><span class="co"># elem1 in set10?</span></span>
+<span id="cb73-7"><a href="#cb73-7" aria-hidden="true" tabindex="-1"></a><span class="fu">is.element</span>(elem1, set10)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="co"># elem2 in set10?</span></span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a><span class="fu">is.element</span>(elem2, set10)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] FALSE</code></pre>
+</div>
+</div>
+<p>Alternatively, you can use the binary operator <code>%in%</code> to test if an element is contained in a given set. The function <code>%in%</code> returns <code>TRUE</code> if the first operand is contained in the second, and it returns <code>FALSE</code> otherwise:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="co"># elem1 in set10?</span></span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>elem1 <span class="sc">%in%</span> set10</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="co"># elem2 in set10?</span></span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>elem2 <span class="sc">%in%</span> set10</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] FALSE</code></pre>
+</div>
+</div>
+</section>
+<section id="sorting-with-sort" class="level3" data-number="3.2.7">
+<h3 data-number="3.2.7" class="anchored" data-anchor-id="sorting-with-sort"><span class="header-section-number">3.2.7</span> Sorting with <code>sort()</code></h3>
+<p>The function <code>sort()</code> allows you to sort the elements of a vector, either in increasing order (by default) or in decreasing order using the argument <code>decreasing</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>set11 <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"today"</span>, <span class="st">"produced"</span>, <span class="st">"example"</span>, <span class="st">"beautiful"</span>, <span class="st">"a"</span>, <span class="st">"nicely"</span>)</span>
+<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb81-3"><a href="#cb81-3" aria-hidden="true" tabindex="-1"></a><span class="co"># sort (decreasing order)</span></span>
+<span id="cb81-4"><a href="#cb81-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span>(set11)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "a"         "beautiful" "example"   "nicely"    "produced"  "today"    </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="co"># sort (increasing order)</span></span>
+<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span>(set11, <span class="at">decreasing =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "today"     "produced"  "nicely"    "example"   "beautiful" "a"        </code></pre>
+</div>
+</div>
+<p>If you have alpha-numeric strings, <code>sort()</code> will put the numbers first when sorting in increasing order:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a>set12 <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"today"</span>, <span class="st">"produced"</span>, <span class="st">"example"</span>, <span class="st">"beautiful"</span>, <span class="st">"1"</span>, <span class="st">"nicely"</span>)</span>
+<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a><span class="co"># sort (decreasing order)</span></span>
+<span id="cb85-4"><a href="#cb85-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span>(set12)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "1"         "beautiful" "example"   "nicely"    "produced"  "today"    </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="co"># sort (increasing order)</span></span>
+<span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span>(set12, <span class="at">decreasing =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "today"     "produced"  "nicely"    "example"   "beautiful" "1"        </code></pre>
+</div>
+</div>
+</section>
+<section id="repetition-with-pasterep" class="level3" data-number="3.2.8">
+<h3 data-number="3.2.8" class="anchored" data-anchor-id="repetition-with-pasterep"><span class="header-section-number">3.2.8</span> Repetition with <code>paste(rep())</code></h3>
+<p>A very common operation with strings is replication, that is, given a string we want to replicate it several times. Although there is no single function in R for that purpose, we can combine <code>paste()</code> and <code>rep()</code> like so:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="co"># repeat "x" 4 times</span></span>
+<span id="cb89-2"><a href="#cb89-2" aria-hidden="true" tabindex="-1"></a><span class="fu">paste</span>(<span class="fu">rep</span>(<span class="st">"x"</span>, <span class="dv">4</span>), <span class="at">collapse =</span> <span class="st">''</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "xxxx"</code></pre>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./02-characters.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Character Strings in R</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./04-stringr-basics.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Basic Manipulations with <code>"stringr"</code> Functions</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">Copyright 2024, <a href="https://www.gastonsanchez.com">Gaston Sanchez</a></div>   
+    <div class="nav-footer-right"><a href="https://www.paypal.com/donate?business=ZF6U7K5MW25W2&amp;currency_code=USD" target="_blank">Donate via PayPal</a></div>
+  </div>
+</footer>
+
+
+
+</body></html>

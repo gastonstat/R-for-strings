@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.251">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>R for Strings - 9&nbsp; Character Sets</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./10-regex-anchors.html" rel="next">
+<link href="./08-regex-intro.html" rel="prev">
+<link href="./images/favicon.ico" rel="icon">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+<script type="text/javascript">
+
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-46765288', 'auto');
+
+ga('send', {
+  hitType: 'pageview',
+  'anonymizeIp': true,
+});
+</script>
+
+
+</head>
+
+<body class="nav-sidebar docked">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Character Sets</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">R for Strings</a> 
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">About</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">I Characters in R</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-introduction.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introductory Appetizer</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-characters.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Character Strings in R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-basic-manipulations.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Basic Manipulations with <code>"base"</code> Functions</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-stringr-basics.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Basic Manipulations with <code>"stringr"</code> Functions</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">II Print &amp; Format</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-printing.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Formatting Text and Numbers</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-sprintf.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">C-style Formatting</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-input-output.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Input and Output</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">III Regex</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-regex-intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Getting Started with Regular Expressions</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-regex-charsets.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Character Sets</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-regex-anchors.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Anchors</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-regex-quantifiers.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Quantifiers</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-regex-boundaries.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Boundaries and Look Arounds</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13-regex-stringr.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Regex Functions in <code>"stringr"</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14-regex-baser.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Regex Functions in R</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">IV Applications</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./15-fun-plot1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Fun Plots (part 1)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./16-fun-plot2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Fun Plots (part 2)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./17-basic-examples.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Basic Examples</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18-matching-html-tags.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Matching HTML Tags</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./19-data-cleaning.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Data Cleaning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./20-log-file.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Data Log File</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#defining-character-sets" id="toc-defining-character-sets" class="nav-link active" data-scroll-target="#defining-character-sets"><span class="toc-section-number">9.1</span>  Defining character sets</a></li>
+  <li><a href="#character-ranges" id="toc-character-ranges" class="nav-link" data-scroll-target="#character-ranges"><span class="toc-section-number">9.2</span>  Character ranges</a></li>
+  <li><a href="#negative-character-sets" id="toc-negative-character-sets" class="nav-link" data-scroll-target="#negative-character-sets"><span class="toc-section-number">9.3</span>  Negative Character Sets</a></li>
+  <li><a href="#metacharacters-inside-character-sets" id="toc-metacharacters-inside-character-sets" class="nav-link" data-scroll-target="#metacharacters-inside-character-sets"><span class="toc-section-number">9.4</span>  Metacharacters Inside Character Sets</a></li>
+  <li><a href="#character-classes" id="toc-character-classes" class="nav-link" data-scroll-target="#character-classes"><span class="toc-section-number">9.5</span>  Character Classes</a></li>
+  <li><a href="#posix-character-classes" id="toc-posix-character-classes" class="nav-link" data-scroll-target="#posix-character-classes"><span class="toc-section-number">9.6</span>  POSIX Character Classes</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="charsets" class="quarto-section-identifier d-none d-lg-block"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Character Sets</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<p>In this chapter we will talk about character sets. You will learn about a couple of more metacharacters, the opening and closing brackets <code>[ ]</code>, that will help you define a character set.</p>
+<p>These square brackets indicate a character set which will match any one of the various characters that are inside the set. Keep in mind that a character set will match only one character. The order of the characters inside the set does not matter; what matter is just the presence of the characters inside the brackets. So for example if you have a set defined by <code>"[AEIOU]"</code>, that will match any one upper case vowel.</p>
+<section id="defining-character-sets" class="level2" data-number="9.1">
+<h2 data-number="9.1" class="anchored" data-anchor-id="defining-character-sets"><span class="header-section-number">9.1</span> Defining character sets</h2>
+<p>Let’s bring back the vector <code>pns</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pns <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">'pan'</span>, <span class="st">'pen'</span>, <span class="st">'pin'</span>, <span class="st">'pon'</span>, <span class="st">'pun'</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>pns</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "pan" "pen" "pin" "pon" "pun"</code></pre>
+</div>
+</div>
+<p>Consider the following pattern that includes a character set: <code>"p[aeiou]n"</code>. As you can tell, this pattern is formed by the character <code>p</code>, folled by the set <code>[aeiou]</code>, followed by the character <code>n</code>. What does this pattern match? Let’s find out with <code>str_view()</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_view</span>(pns, <span class="st">"p[aeiou]n"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The set <code>"p[aeiou]n"</code> matches all elements in <code>pns</code>.</p>
+<p>For comparison purposes, let’s create another vector <code>pnx</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>pnx <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">'pan'</span>, <span class="st">'pen'</span>, <span class="st">'pin'</span>, <span class="st">'p0n'</span>, <span class="st">'p.n'</span>, <span class="st">'p1n'</span>, <span class="st">'paun'</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>pnx</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "pan"  "pen"  "pin"  "p0n"  "p.n"  "p1n"  "paun"</code></pre>
+</div>
+</div>
+<p>And let’s test again the pattern <code>"p[aeiou]n"</code> to see what elements are matched</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_view</span>(pnx, <span class="st">"p[aeiou]n"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This time only the first three elements in <code>pnx</code> are matched. Notice also that <em>paun</em> is not matched. This is because the character set matches only one character, either <em>a</em> or <em>u</em> but not <em>au</em>.</p>
+<p>If you are interested in matching all capital letters in English, you can define a set formed as:</p>
+<pre><code>[ABCDEFGHIJKLMNOPQRSTUVWXYZ]</code></pre>
+<p>Likewise, you can define a set with only lower case letters in English:</p>
+<pre><code>[abcdefghijklmnopqrstuvwxyz]</code></pre>
+<p>If you are interested in matching any digit, you can also specify a character set like this:</p>
+<pre><code>[0123456789]</code></pre>
+</section>
+<section id="character-ranges" class="level2" data-number="9.2">
+<h2 data-number="9.2" class="anchored" data-anchor-id="character-ranges"><span class="header-section-number">9.2</span> Character ranges</h2>
+<p>The previous examples that show character sets containing all the capital letters or all lower case letters are very convenient but require a lot of typing. <strong>Character ranges</strong> are going to help you solve that problem, by giving you a convenient shortcut based on the dash metacharacter <code>"-"</code> to indicate a range of characters. A character range consists of a character set with two characters separated by a dash or minus <code>"-"</code> sign.</p>
+<p>Let’s see how you can reexpress the examples in the previous section as character ranges. The set of all digits can be expressed as a character range using the following pattern:</p>
+<pre><code>[0-9]</code></pre>
+<p>Likewise, the set of all lower case letters <em>abcd…xyz</em> is compactly represented with the character range:</p>
+<pre><code>[a-z]</code></pre>
+<p>And the character set of all upper case letters <em>ABD…XYZ</em> is formed by</p>
+<pre><code>[A-Z]</code></pre>
+<p>Note that the dash is only a metacharacter when it is inside a character set; outside the character set it is just a literal dash.</p>
+<p>So how do you use character range? To illustrate the concept of character ranges let’s create a <code>basic</code> vector with some simple strings, and see what the different ranges match:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>basic <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">'1'</span>, <span class="st">'a'</span>, <span class="st">'A'</span>, <span class="st">'&amp;'</span>, <span class="st">'-'</span>, <span class="st">'^'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>First, we use the range <code>[0-9]</code> to match any single digit</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># digits</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str_view</span>(basic, <span class="st">'[0-9]'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Then we use the range of lower case letters <code>[a-z]</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># lower case letters</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str_view</span>(basic, <span class="st">'[a-z]'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>And finally the range of upper case letters <code>[A-Z]</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># upper case letters</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str_view</span>(basic, <span class="st">'[A-Z]'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now consider the following vector <code>triplets</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>triplets <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">'123'</span>, <span class="st">'abc'</span>, <span class="st">'ABC'</span>, <span class="st">':-)'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>You can use a series of character ranges to match various occurrences of a certain type of character. For example, to match three consecutive digits you can define a pattern <code>"[0-9][0-9][0-9]"</code>; to match three consecutive lower case letters you can use the pattern <code>"[a-z][a-z][a-z]"</code>; and the same idea applies to a pattern that matches three consecutive upper case letters <code>"[A-Z][A-Z][A-Z]"</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_view</span>(triplets, <span class="st">'[0-9][0-9][0-9]'</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">str_view</span>(triplets, <span class="st">'[A-Z][A-Z][A-Z]'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Observe that the element <code>":-)"</code> is not matched by any of the character ranges that we have seen so far.</p>
+<p>Character ranges can be defined in multiple ways. For example, the range <code>"[1-3]"</code> indicates any one digit 1, 2, or 3. Another range may be defined as <code>"[5-9]"</code> comprising any one digit 5, 6, 7, 8 or 9. The same idea applies to letters. You can define shorter ranges other than <code>"[a-z]"</code>. One example is <code>"[a-d]"</code> which consists of any one letter <em>a</em>, <em>b</em>, <em>c</em>, and <em>d</em>.</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Pattern</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>[aeiou]</code></td>
+<td>match any one lower case vowel</td>
+</tr>
+<tr class="even">
+<td><code>[AEIOU]</code></td>
+<td>match any one upper case vowel</td>
+</tr>
+<tr class="odd">
+<td><code>[0123456789]</code></td>
+<td>match any digit</td>
+</tr>
+<tr class="even">
+<td><code>[0-9]</code></td>
+<td>match any digit (same as previous class)</td>
+</tr>
+<tr class="odd">
+<td><code>[a-z]</code></td>
+<td>match any lower case ASCII letter</td>
+</tr>
+<tr class="even">
+<td><code>[A-Z]</code></td>
+<td>match any upper case ASCII letter</td>
+</tr>
+<tr class="odd">
+<td><code>[a-zA-Z0-9]</code></td>
+<td>match any of the above classes</td>
+</tr>
+<tr class="even">
+<td><code>[^aeiou]</code></td>
+<td>match anything other than a lowercase vowel</td>
+</tr>
+<tr class="odd">
+<td><code>[^0-9]</code></td>
+<td>match anything other than a digit</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="negative-character-sets" class="level2" data-number="9.3">
+<h2 data-number="9.3" class="anchored" data-anchor-id="negative-character-sets"><span class="header-section-number">9.3</span> Negative Character Sets</h2>
+<p>A common situation when working with regular expressions consists of matching characters that are NOT part of a certain set. This type of matching can be done using a negative character set: by matching any one character that is not in the set. To define this type of sets you are going to use the metacharacter caret <code>"^"</code>. If you are using a QWERTY keyboard, the caret symbol should be located over the key with the number 6.</p>
+<p>The caret <code>"^"</code> is one of those metacharacters that have more than one meaning depending on where it appears in a pattern. If you use a caret in the first position inside a character set, e.g.&nbsp;<code>[^aeiou]</code>, it means <em>negation</em>. In other words, the caret in <code>[^aeiou]</code> means “not any one of lower case vowels.”</p>
+<p>Let’s use the <code>basic</code> vector previously defined:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>basic <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">'1'</span>, <span class="st">'a'</span>, <span class="st">'A'</span>, <span class="st">'&amp;'</span>, <span class="st">'-'</span>, <span class="st">'^'</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>basic</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "1" "a" "A" "&amp;" "-" "^"</code></pre>
+</div>
+</div>
+<p>To match those elements that are NOT upper case letters, you define a negative character range <code>"[^A-Z]"</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_view</span>(basic, <span class="st">'[^A-Z]'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>It is important that the caret is the first character inside the character set, otherwise the set is not a negative one:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_view</span>(basic, <span class="st">'[A-Z^]'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>In the example above, the pattern <code>"[A-Z^]"</code> means “any one upper case letter or the caret character.” Which is completely different from the negative set <code>"[^A-Z]"</code> that negates any one upper case letter.</p>
+<p>If you want to match any character except the caret, then you need to use a character set with two carets: <code>"[^^]"</code>. The first caret works as a negative operator, the second caret is the caret character itself:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_view</span>(basic, <span class="st">'[^^]'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="metacharacters-inside-character-sets" class="level2" data-number="9.4">
+<h2 data-number="9.4" class="anchored" data-anchor-id="metacharacters-inside-character-sets"><span class="header-section-number">9.4</span> Metacharacters Inside Character Sets</h2>
+<p>Now that you know what character sets are, how to define character ranges, and how to specify negative character sets, we need to talk about what happens when including metacharacters inside character sets.</p>
+<p>Except for the caret in the first position of the character set, any other metacharacter inside a character set is already escaped. This implies that you do not need to escape them using backslashes.</p>
+<p>To illustrate the use of metacharacters inside character sets, let’s use the <code>pnx</code> vector:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>pnx <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">'pan'</span>, <span class="st">'pen'</span>, <span class="st">'pin'</span>, <span class="st">'p0n'</span>, <span class="st">'p.n'</span>, <span class="st">'p1n'</span>, <span class="st">'paun'</span>)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>pnx</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The character set formed by <code>"p[ae.io]n"</code> includes the dot character. Remember that, in general, the period is the wildcard metacharacter and it matches any type of character. However, the period in this example is inside a character set, and because of that, it loses its wildcard behavior.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_view</span>(pnx, <span class="st">"p[ae.io]n"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>As you can tell, <code>"p[ae.io]n"</code> matches <em>pan</em>, <em>pen</em>, <em>pin</em> and <em>p.n</em>, but not <em>p0n</em> or <em>p1n</em> because the dot is the literal dot, not a wildcard character anymore.</p>
+<p>Not all metacharacters become literal characters when they appear inside a character set. The exceptions are the closing bracket <code>]</code>, the dash <code>-</code>, the caret <code>^</code>, and the backslash <code>\</code>.</p>
+<p>The closing bracket <code>]</code> is used to enclose the character set. Thus, if you want to use a literal right bracket inside a character set you must escape it:</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="st">"[aei</span><span class="sc">\\</span><span class="st">[ou]"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Remember that in R you use double backslash for escaping purposes. This is also why the backslash <code>\</code>, or double backslash in R, does not become a literal character.</p>
+<p>Another interesting case has to do with the dash or hyphen <code>-</code> character. As you know, the dash inside a character set is used to define a range of characters: e.g.&nbsp;<code>[0-9]</code>, <code>[x-z]</code>, and <code>[K-P]</code>. As a general rule, if you want to include a literal dash as part of a range, you should escape it: <code>"[a-z\\-]"</code>.</p>
+<p>Let’s modify the <code>basic</code> vector by adding an opening and ending brackets:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>basic <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">'1'</span>, <span class="st">'a'</span>, <span class="st">'A'</span>, <span class="st">'&amp;'</span>, <span class="st">'-'</span>, <span class="st">'^'</span>, <span class="st">'['</span>, <span class="st">']'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>How do you match each of the characters that have a special meaning inside a character set?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># matching a literal caret</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str_view</span>(basic, <span class="st">"[a</span><span class="sc">\\</span><span class="st">^]"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># matching a literal dash</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str_view</span>(basic, <span class="st">"[a</span><span class="sc">\\</span><span class="st">-]"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># matching a literal opening bracket</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str_view</span>(basic, <span class="st">"[a</span><span class="sc">\\</span><span class="st">[]"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># matching a literal closing bracket</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str_view</span>(basic, <span class="st">"[a</span><span class="sc">\\</span><span class="st">]]"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="character-classes" class="level2" data-number="9.5">
+<h2 data-number="9.5" class="anchored" data-anchor-id="character-classes"><span class="header-section-number">9.5</span> Character Classes</h2>
+<p>Closely related with character sets and character ranges, regular expressions provide another useful construct called <strong>character classes</strong> which, as their name indicates, are used to match a certain class of characters. The most common character classes in most regex engines are:</p>
+<table class="table">
+<colgroup>
+<col style="width: 15%">
+<col style="width: 61%">
+<col style="width: 23%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Character</th>
+<th style="text-align: left;">Matches</th>
+<th style="text-align: left;">Same as</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>\\d</code></td>
+<td style="text-align: left;">any digit</td>
+<td style="text-align: left;"><code>[0-9]</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>\\D</code></td>
+<td style="text-align: left;">any nondigit</td>
+<td style="text-align: left;"><code>[^0-9]</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>\\s</code></td>
+<td style="text-align: left;">any whitespace character</td>
+<td style="text-align: left;"><code>[\f\n\r\t\v]</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>\\S</code></td>
+<td style="text-align: left;">any nonwhitespace character</td>
+<td style="text-align: left;"><code>[^\f\n\r\t\v]</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>\\w</code></td>
+<td style="text-align: left;">any character considered part of a word</td>
+<td style="text-align: left;"><code>[a-zA-Z0-9_]</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>\\W</code></td>
+<td style="text-align: left;">any character not considered part of a word</td>
+<td style="text-align: left;"><code>[^a-zA-Z0-9_]</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>\\b</code></td>
+<td style="text-align: left;">any word boundary</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>\\B</code></td>
+<td style="text-align: left;">any non-(word boundary)</td>
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+<p>You can think of character classes as another type of metacharacters, or as shortcuts for special character sets.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># replace digit with '_'</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str_replace</span>(<span class="st">"the dandelion war 2010"</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">d"</span>, <span class="st">"_"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "the dandelion war _010"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_replace_all</span>(<span class="st">"the dandelion war 2010"</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">d"</span>, <span class="st">"_"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "the dandelion war ____"</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># replace non-digit with '_'</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str_replace</span>(<span class="st">"the dandelion war 2010"</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">D"</span>, <span class="st">"_"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "_he dandelion war 2010"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_replace_all</span>(<span class="st">"the dandelion war 2010"</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">D"</span>, <span class="st">"_"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "__________________2010"</code></pre>
+</div>
+</div>
+<p><strong>Spaces and non-spaces</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># replace space with '_'</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str_replace</span>(<span class="st">"the dandelion war 2010"</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">s"</span>, <span class="st">"_"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "the_dandelion war 2010"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_replace_all</span>(<span class="st">"the dandelion war 2010"</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">s"</span>, <span class="st">"_"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "the_dandelion_war_2010"</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># replace non-space with '_'</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str_replace</span>(<span class="st">"the dandelion war 2010"</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">S"</span>, <span class="st">"_"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "_he dandelion war 2010"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_replace_all</span>(<span class="st">"the dandelion war 2010"</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">S"</span>, <span class="st">"_"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "___ _________ ___ ____"</code></pre>
+</div>
+</div>
+<p><strong>Words and non-words</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># replace word with '_'</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str_replace</span>(<span class="st">"the dandelion war 2010"</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">b"</span>, <span class="st">"_"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "_the dandelion war 2010"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_replace_all</span>(<span class="st">"the dandelion war 2010"</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">b"</span>, <span class="st">"_"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "_the_ _dandelion_ _war_ _2010_"</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># replace non-word with '_'</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str_replace</span>(<span class="st">"the dandelion war 2010"</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">B"</span>, <span class="st">"_"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "t_he dandelion war 2010"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_replace_all</span>(<span class="st">"the dandelion war 2010"</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">B"</span>, <span class="st">"_"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "t_h_e d_a_n_d_e_l_i_o_n w_a_r 2_0_1_0"</code></pre>
+</div>
+</div>
+<p><strong>Word boundaries and non-word-boundaries</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co"># replace word boundary with '_'</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str_replace</span>(<span class="st">"the dandelion war 2010"</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">w"</span>, <span class="st">"_"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "_he dandelion war 2010"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_replace_all</span>(<span class="st">"the dandelion war 2010"</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">w"</span>, <span class="st">"_"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "___ _________ ___ ____"</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="co"># replace non-word boundary with '_'</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str_replace</span>(<span class="st">"the dandelion war 2010"</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">W"</span>, <span class="st">"_"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "the_dandelion war 2010"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_replace_all</span>(<span class="st">"the dandelion war 2010"</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">W"</span>, <span class="st">"_"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "the_dandelion_war_2010"</code></pre>
+</div>
+</div>
+<p>The following table shows the characters that represent whitespaces:</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Character</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>\f</code></td>
+<td style="text-align: left;">form feed</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>\n</code></td>
+<td style="text-align: left;">line feed</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>\r</code></td>
+<td style="text-align: left;">carriage return</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>\t</code></td>
+<td style="text-align: left;">tab</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>\v</code></td>
+<td style="text-align: left;">vertical tab</td>
+</tr>
+</tbody>
+</table>
+<p>Sometimes you have to deal with nonprinting whitespace characters. In these situations you probably will end up using the whitespace character class <code>\\s</code>. A common example is when you have to match tab characters, or line breaks.</p>
+<p>The operating system Windows uses <code>\r\n</code> as an end-of-line marker. In contrast, Unix-like operating systems (including Mac OS) use <code>\n</code>.</p>
+<p>Tab characters <code>\t</code> are commonly used as a field-separator for data files. But most text editors render them as whitespaces.</p>
+</section>
+<section id="posix-character-classes" class="level2" data-number="9.6">
+<h2 data-number="9.6" class="anchored" data-anchor-id="posix-character-classes"><span class="header-section-number">9.6</span> POSIX Character Classes</h2>
+<p>We finish this chapter with the introduction of another type of character classes known as <strong>POSIX character classes</strong>. These are yet another class construct that is supported by the regex engine in R.</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Class</th>
+<th style="text-align: left;">Description</th>
+<th style="text-align: left;">Same as</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>[:alnum:]</code></td>
+<td style="text-align: left;">any letter or digit</td>
+<td style="text-align: left;"><code>[a-zA-Z0-9]</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>[:alpha:]</code></td>
+<td style="text-align: left;">any letter</td>
+<td style="text-align: left;"><code>[a-zA-Z]</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>[:digit:]</code></td>
+<td style="text-align: left;">any digit</td>
+<td style="text-align: left;"><code>[0-9]</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>[:lower:]</code></td>
+<td style="text-align: left;">any lower case letter</td>
+<td style="text-align: left;"><code>[a-z]</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>[:upper:]</code></td>
+<td style="text-align: left;">any upper case letter</td>
+<td style="text-align: left;"><code>[A-Z]</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>[:space:]</code></td>
+<td style="text-align: left;">any whitespace including space</td>
+<td style="text-align: left;"><code>[\f\n\r\t\v ]</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>[:punct:]</code></td>
+<td style="text-align: left;">any punctuation symbol</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>[:print:]</code></td>
+<td style="text-align: left;">any printable character</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>[:graph:]</code></td>
+<td style="text-align: left;">any printable character excluding space</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>[:xdigit:]</code></td>
+<td style="text-align: left;">any hexadecimal digit</td>
+<td style="text-align: left;"><code>[a-fA-F0-9]</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>[:cntrl:]</code></td>
+<td style="text-align: left;">ASCII control characters</td>
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+<p>Notice that a POSIX character class is formed by an opening bracket <code>[</code>, followed by a colon <code>:</code>, followed by some keyword, followed by another colon <code>:</code>, and finally a closing bracket <code>]</code>.</p>
+<p>In order to use them in R, you have to wrap a POSIX class inside a regex character class. That is, you have to surround a POSIX class with brackets.</p>
+<p>Once again, refer to the <code>pnx</code> vector to illustrate the use of POSIX classes:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>pnx <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">'pan'</span>, <span class="st">'pen'</span>, <span class="st">'pin'</span>, <span class="st">'p0n'</span>, <span class="st">'p.n'</span>, <span class="st">'p1n'</span>, <span class="st">'paun'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Let’s start with the <code>[:alpha:]</code> class, and see what does it match in <code>pnx</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_view</span>(pnx, <span class="st">"[[:alpha:]]"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now let’s test it with <code>[:digit:]</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_view</span>(pnx, <span class="st">"[[:digit:]]"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Here’s another example, suppose we are dealing with the following string:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="co"># la vie (string)</span></span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>la_vie <span class="ot">&lt;-</span> <span class="st">"La vie en #FFC0CB (rose);</span><span class="sc">\n</span><span class="st">Ces't la vie! </span><span class="sc">\t</span><span class="st">tres jolie"</span></span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a><span class="co"># if you print 'la_vie'</span></span>
+<span id="cb67-5"><a href="#cb67-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(la_vie)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "La vie en #FFC0CB (rose);\nCes't la vie! \ttres jolie"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="co"># if you cat 'la_vie'</span></span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(la_vie)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>La vie en #FFC0CB (rose);
+Ces't la vie!   tres jolie</code></pre>
+</div>
+</div>
+<p>Here’s what would happen to the string <code>la_vie</code> if we apply some substitutions with the POSIX character classes:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="co"># remove space characters</span></span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str_replace_all</span>(la_vie, <span class="at">pattern=</span><span class="st">"[[:blank:]]"</span>, <span class="at">replacement=</span><span class="st">''</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Lavieen#FFC0CB(rose);\nCes'tlavie!tresjolie"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="co"># remove digits</span></span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str_replace_all</span>(la_vie, <span class="at">pattern=</span><span class="st">"[[:punct:]]"</span>, <span class="at">replacement=</span><span class="st">''</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "La vie en FFC0CB rose\nCest la vie \ttres jolie"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="co"># remove digits</span></span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str_replace_all</span>(la_vie, <span class="at">pattern=</span><span class="st">"[[:xdigit:]]"</span>, <span class="at">replacement=</span><span class="st">''</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "L vi n # (ros);\ns't l vi! \ttrs joli"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="co"># remove printable characters</span></span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str_replace_all</span>(la_vie, <span class="at">pattern=</span><span class="st">"[[:print:]]"</span>, <span class="at">replacement=</span><span class="st">''</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "\n\t"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="co"># remove non-printable characters</span></span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str_replace_all</span>(la_vie, <span class="at">pattern=</span><span class="st">"[^[:print:]]"</span>, <span class="at">replacement=</span><span class="st">''</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "La vie en #FFC0CB (rose);Ces't la vie! tres jolie"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="co"># remove graphical characters</span></span>
+<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str_replace_all</span>(la_vie, <span class="at">pattern=</span><span class="st">"[[:graph:]]"</span>, <span class="at">replacement=</span><span class="st">''</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "    \n   \t "</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="co"># remove non-graphical characters</span></span>
+<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str_replace_all</span>(la_vie, <span class="at">pattern=</span><span class="st">"[^[:graph:]]"</span>, <span class="at">replacement=</span><span class="st">''</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Lavieen#FFC0CB(rose);Ces'tlavie!tresjolie"</code></pre>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./08-regex-intro.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Getting Started with Regular Expressions</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./10-regex-anchors.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Anchors</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">Copyright 2024, <a href="https://www.gastonsanchez.com">Gaston Sanchez</a></div>   
+    <div class="nav-footer-right"><a href="https://www.paypal.com/donate?business=ZF6U7K5MW25W2&amp;currency_code=USD" target="_blank">Donate via PayPal</a></div>
+  </div>
+</footer>
+
+
+
+</body></html>
