@@ -2,90 +2,90 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://www.gastonsanchez.com/R-for-strings/index.html</loc>
-    <lastmod>2024-01-03T14:26:28.878Z</lastmod>
+    <lastmod>2024-01-03T15:18:40.831Z</lastmod>
   </url>
   <url>
     <loc>https://www.gastonsanchez.com/R-for-strings/01-introduction.html</loc>
-    <lastmod>2024-01-03T14:26:28.879Z</lastmod>
+    <lastmod>2024-01-03T15:18:40.850Z</lastmod>
   </url>
   <url>
     <loc>https://www.gastonsanchez.com/R-for-strings/02-characters.html</loc>
-    <lastmod>2024-01-03T14:26:28.898Z</lastmod>
+    <lastmod>2024-01-03T15:18:40.852Z</lastmod>
   </url>
   <url>
     <loc>https://www.gastonsanchez.com/R-for-strings/03-basic-manipulations.html</loc>
-    <lastmod>2024-01-03T14:26:28.916Z</lastmod>
+    <lastmod>2024-01-03T15:18:40.871Z</lastmod>
   </url>
   <url>
     <loc>https://www.gastonsanchez.com/R-for-strings/04-stringr-basics.html</loc>
-    <lastmod>2024-01-03T14:26:28.936Z</lastmod>
+    <lastmod>2024-01-03T15:18:40.873Z</lastmod>
   </url>
   <url>
     <loc>https://www.gastonsanchez.com/R-for-strings/05-printing.html</loc>
-    <lastmod>2024-01-03T14:26:28.956Z</lastmod>
+    <lastmod>2024-01-03T15:18:40.892Z</lastmod>
   </url>
   <url>
     <loc>https://www.gastonsanchez.com/R-for-strings/06-sprintf.html</loc>
-    <lastmod>2024-01-03T14:26:28.977Z</lastmod>
+    <lastmod>2024-01-03T15:18:40.912Z</lastmod>
   </url>
   <url>
     <loc>https://www.gastonsanchez.com/R-for-strings/07-input-output.html</loc>
-    <lastmod>2024-01-03T14:26:28.997Z</lastmod>
+    <lastmod>2024-01-03T15:18:40.931Z</lastmod>
   </url>
   <url>
     <loc>https://www.gastonsanchez.com/R-for-strings/08-regex-intro.html</loc>
-    <lastmod>2024-01-03T14:26:29.017Z</lastmod>
+    <lastmod>2024-01-03T15:18:40.950Z</lastmod>
   </url>
   <url>
     <loc>https://www.gastonsanchez.com/R-for-strings/09-regex-charsets.html</loc>
-    <lastmod>2024-01-03T14:26:29.038Z</lastmod>
+    <lastmod>2024-01-03T15:18:40.970Z</lastmod>
   </url>
   <url>
     <loc>https://www.gastonsanchez.com/R-for-strings/10-regex-anchors.html</loc>
-    <lastmod>2024-01-03T14:26:29.057Z</lastmod>
+    <lastmod>2024-01-03T15:18:40.990Z</lastmod>
   </url>
   <url>
     <loc>https://www.gastonsanchez.com/R-for-strings/11-regex-quantifiers.html</loc>
-    <lastmod>2024-01-03T14:26:29.078Z</lastmod>
+    <lastmod>2024-01-03T15:18:41.009Z</lastmod>
   </url>
   <url>
     <loc>https://www.gastonsanchez.com/R-for-strings/12-regex-boundaries.html</loc>
-    <lastmod>2024-01-03T14:26:29.098Z</lastmod>
+    <lastmod>2024-01-03T15:18:41.029Z</lastmod>
   </url>
   <url>
     <loc>https://www.gastonsanchez.com/R-for-strings/13-regex-stringr.html</loc>
-    <lastmod>2024-01-03T14:26:29.118Z</lastmod>
+    <lastmod>2024-01-03T15:18:41.049Z</lastmod>
   </url>
   <url>
     <loc>https://www.gastonsanchez.com/R-for-strings/14-regex-baser.html</loc>
-    <lastmod>2024-01-03T14:26:29.139Z</lastmod>
+    <lastmod>2024-01-03T15:18:41.069Z</lastmod>
   </url>
   <url>
     <loc>https://www.gastonsanchez.com/R-for-strings/15-fun-plot1.html</loc>
-    <lastmod>2024-01-03T14:26:29.162Z</lastmod>
+    <lastmod>2024-01-03T15:18:41.071Z</lastmod>
   </url>
   <url>
     <loc>https://www.gastonsanchez.com/R-for-strings/16-fun-plot2.html</loc>
-    <lastmod>2024-01-03T14:26:29.183Z</lastmod>
+    <lastmod>2024-01-03T15:18:41.089Z</lastmod>
   </url>
   <url>
     <loc>https://www.gastonsanchez.com/R-for-strings/17-basic-examples.html</loc>
-    <lastmod>2024-01-03T14:26:29.209Z</lastmod>
+    <lastmod>2024-01-03T15:18:41.091Z</lastmod>
   </url>
   <url>
     <loc>https://www.gastonsanchez.com/R-for-strings/18-matching-html-tags.html</loc>
-    <lastmod>2024-01-03T14:26:29.228Z</lastmod>
+    <lastmod>2024-01-03T15:18:41.110Z</lastmod>
   </url>
   <url>
     <loc>https://www.gastonsanchez.com/R-for-strings/19-data-cleaning.html</loc>
-    <lastmod>2024-01-03T14:26:29.248Z</lastmod>
+    <lastmod>2024-01-03T15:18:41.131Z</lastmod>
   </url>
   <url>
     <loc>https://www.gastonsanchez.com/R-for-strings/20-log-file.html</loc>
-    <lastmod>2024-01-03T14:26:29.255Z</lastmod>
+    <lastmod>2024-01-03T15:18:41.153Z</lastmod>
   </url>
   <url>
     <loc>https://www.gastonsanchez.com/R-for-strings/R-for-Strings.pdf</loc>
-    <lastmod>2024-01-03T14:26:28.440Z</lastmod>
+    <lastmod>2024-01-03T15:18:40.441Z</lastmod>
   </url>
 </urlset>
